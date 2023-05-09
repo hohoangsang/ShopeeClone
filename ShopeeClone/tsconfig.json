@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
+    "target": "ES2015", //Phiên bản ECMA script muốn build ra
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "module": "ESNext",
+    "module": "ESNext", //Kiểu code muốn build ra
     "skipLibCheck": true,
 
     /* Bundler mode */
