@@ -6,7 +6,7 @@ export default function AuthHeader() {
 
   return (
     <header className='bg-ưhite py-5'>
-      <div className='container mx-auto max-w-7xl px-4'>
+      <div className='mx-auto max-w-7xl px-4'>
         <nav className='flex items-center justify-between'>
           <div className='flex items-end'>
             <Link to={'/'}>
