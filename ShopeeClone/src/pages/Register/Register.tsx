@@ -1,19 +1,19 @@
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import Input from 'src/components/Form/Input';
-import { RegisterSchema, getRules, registerSchema } from 'src/utils/rules';
+import { RegisterSchema, registerSchema } from 'src/utils/rules';
 import { yupResolver } from '@hookform/resolvers/yup';
-
-type FormState = {
-  email: string;
-  password: string;
-  confirm_password: string;
-};
+import { useMutation } from '@tanstack/react-query';
+import { registerAccount } from 'src/api/auth.api';
+import { omit } from 'lodash';
+import { isAxiosErrorUnprocessableEntity } from 'src/utils/utils';
+import { ResponseType } from 'src/types/utils.type';
 
 export default function Register() {
   const {
     handleSubmit,
     register,
+    setError,
     watch, //method này dùng để lấy dữ liệu trong ô input nhưng làm cho component re-render trong suốt quá trình change input
     getValues, //method này dùng để lấy dữ liệu trong ô input và ko làm cho component re-render
     formState: { errors }
@@ -21,10 +21,39 @@ export default function Register() {
     resolver: yupResolver(registerSchema)
   });
 
-  const rules = getRules(getValues);
+  const registerAccountMutation = useMutation({
+    mutationFn: (body: Omit<RegisterSchema, 'confirm_password'>) => {
+      return registerAccount(body);
+    }
+  });
 
   const onSubmit = handleSubmit((data) => {
-    console.log(data);
+    const body = omit(data, ['confirm_password']);
+    registerAccountMutation.mutate(body, {
+      onSuccess: (data) => {
+        console.log(data);
+      },
+      onError: (error) => {
+        if (isAxiosErrorUnprocessableEntity<ResponseType<Omit<RegisterSchema, 'confirm_password'>>>(error)) {
+          const formError = error.response?.data.data;
+
+          if (formError) {
+            Object.keys(formError).forEach((key) => {
+              setError(
+                key as keyof Omit<RegisterSchema, 'confirm_password'>,
+                {
+                  message: formError[key as keyof Omit<RegisterSchema, 'confirm_password'>],
+                  type: 'Server'
+                },
+                {
+                  shouldFocus: true
+                }
+              );
+            });
+          }
+        }
+      }
+    });
   });
 
   return (
