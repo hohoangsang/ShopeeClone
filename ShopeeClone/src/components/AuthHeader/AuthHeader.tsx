@@ -5,7 +5,7 @@ export default function AuthHeader() {
   const isLoginMode = useMatch('/login');
 
   return (
-    <header className='bg-ưhite py-5'>
+    <header className='bg-ưhite py-2'>
       <div className='container'>
         <nav className='flex items-center justify-between'>
           <div className='flex items-end'>
