@@ -1,12 +1,29 @@
-import React from 'react';
+import { useFloating } from '@floating-ui/react-dom';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 export default function Header() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const { refs, floatingStyles } = useFloating({
+    open: isOpen,
+    placement: 'bottom-end'
+  });
+
+  const showPortal = () => setIsOpen(true);
+
+  const hidePortal = () => setIsOpen(false);
+
   return (
     <div className='bg-orange'>
       <div className='container'>
         <div className='flex justify-end'>
-          <div className='flex cursor-pointer items-center text-sm text-white hover:text-gray-300'>
+          <div
+            className='flex cursor-pointer items-center text-sm text-white hover:text-gray-300'
+            onMouseEnter={showPortal}
+            onMouseLeave={hidePortal}
+            ref={refs.setFloating}
+          >
             <svg
               xmlns='http://www.w3.org/2000/svg'
               fill='none'
@@ -35,6 +52,16 @@ export default function Header() {
               <path strokeLinecap='round' strokeLinejoin='round' d='M19.5 8.25l-7.5 7.5-7.5-7.5' />
             </svg>
           </div>
+
+          {isOpen && (
+            <div className='Tooltip rounded-sm border border-gray-300 bg-white p-4 shadow-sm'>
+              <div className='flex flex-col'>
+                <div>Tiếng Việt</div>
+                <div>English</div>
+              </div>
+            </div>
+          )}
+
           <div className='ml-4 flex cursor-pointer items-center text-sm text-white hover:text-gray-300'>
             <div className='h-6 w-6'>
               <img
