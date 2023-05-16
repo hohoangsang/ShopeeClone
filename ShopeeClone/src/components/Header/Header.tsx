@@ -1,28 +1,19 @@
-import { useFloating } from '@floating-ui/react-dom';
-import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import Popover from '../Popover';
 
 export default function Header() {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const { refs, floatingStyles } = useFloating({
-    open: isOpen,
-    placement: 'bottom-end'
-  });
-
-  const showPortal = () => setIsOpen(true);
-
-  const hidePortal = () => setIsOpen(false);
-
   return (
     <div className='bg-orange'>
       <div className='container'>
         <div className='flex justify-end'>
-          <div
+          <Popover
+            renderPopover={
+              <div className='flex flex-col gap-4 py-2 pl-3 pr-28'>
+                <button className='text-left text-black hover:text-orange'>Tiếng Việt</button>
+                <button className='text-left text-black hover:text-orange'>English</button>
+              </div>
+            }
             className='flex cursor-pointer items-center text-sm text-white hover:text-gray-300'
-            onMouseEnter={showPortal}
-            onMouseLeave={hidePortal}
-            ref={refs.setFloating}
           >
             <svg
               xmlns='http://www.w3.org/2000/svg'
@@ -51,18 +42,22 @@ export default function Header() {
             >
               <path strokeLinecap='round' strokeLinejoin='round' d='M19.5 8.25l-7.5 7.5-7.5-7.5' />
             </svg>
-          </div>
+          </Popover>
 
-          {isOpen && (
-            <div className='Tooltip rounded-sm border border-gray-300 bg-white p-4 shadow-sm'>
-              <div className='flex flex-col'>
-                <div>Tiếng Việt</div>
-                <div>English</div>
+          <Popover
+            renderPopover={
+              <div className='flex flex-col gap-x-4 gap-y-6 py-2 pl-3 pr-20'>
+                <Link to={'/'} className='text-left hover:text-[#00bfa5] '>
+                  Tài khoản của tôi
+                </Link>
+                <Link to={'/'} className='text-left hover:text-[#00bfa5] '>
+                  Đơn mua
+                </Link>
+                <button className='text-left hover:text-[#00bfa5] '>Đăng xuất</button>
               </div>
-            </div>
-          )}
-
-          <div className='ml-4 flex cursor-pointer items-center text-sm text-white hover:text-gray-300'>
+            }
+            className='ml-4 flex cursor-pointer items-center text-sm text-white hover:text-gray-300'
+          >
             <div className='h-6 w-6'>
               <img
                 src='https://down-vn.img.susercontent.com/file/13dc547563539af96b776efa692f5091_tn'
@@ -72,7 +67,7 @@ export default function Header() {
             </div>
 
             <span className='mx-1'>Hồ Hoàng Sang</span>
-          </div>
+          </Popover>
         </div>
 
         <div className='grid grid-cols-12 items-end gap-4'>
