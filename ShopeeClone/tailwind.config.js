@@ -10,7 +10,8 @@ export default {
   theme: {
     extend: {
       colors: {
-        orange: '#ee4d2d'
+        orange: '#ee4d2d',
+        l_orange: '#f05d40'
       },
       height: {
         auth__hero: '600px'
