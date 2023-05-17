@@ -6,7 +6,7 @@ import ProductList from 'src/pages/ProductList';
 import Profile from 'src/pages/Profile';
 import Register from 'src/pages/Register';
 
-const isAuthentication = false;
+const isAuthentication = true;
 
 function ProtectedRoute() {
   return isAuthentication ? <Outlet /> : <Navigate to={'/login'} />; //chưa dăng nhập thì đá ra màn hình login, đã đăng nhập thì tiếp tục render route con
@@ -18,14 +18,6 @@ function RejectedRoute() {
 
 export default function useRouteElement() {
   const elementRoute = useRoutes([
-    {
-      path: '/',
-      element: (
-        <MainLayout>
-          <ProductList />
-        </MainLayout>
-      )
-    },
     {
       path: '',
       element: <ProtectedRoute />,
@@ -41,19 +33,34 @@ export default function useRouteElement() {
       ]
     },
     {
-      path: '/login',
-      element: (
-        <AuthLayout>
-          <Login />
-        </AuthLayout>
-      )
+      path: '',
+      element: <RejectedRoute />,
+      children: [
+        {
+          path: '/login',
+          element: (
+            <AuthLayout>
+              <Login />
+            </AuthLayout>
+          )
+        },
+        {
+          path: '/register',
+          element: (
+            <AuthLayout>
+              <Register />
+            </AuthLayout>
+          )
+        }
+      ]
     },
     {
-      path: '/register',
+      path: '/',
+      index: true, //Phân biệt đây là route chính để không bị trùng lặp với các kiểu path là ''
       element: (
-        <AuthLayout>
-          <Register />
-        </AuthLayout>
+        <MainLayout>
+          <ProductList />
+        </MainLayout>
       )
     }
   ]);

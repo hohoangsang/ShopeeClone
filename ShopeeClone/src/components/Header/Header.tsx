@@ -47,7 +47,7 @@ export default function Header() {
           <Popover
             renderPopover={
               <div className='flex flex-col gap-x-4 gap-y-6 py-2 pl-3 pr-20'>
-                <Link to={'/'} className='text-left hover:text-[#00bfa5] '>
+                <Link to={'/profile'} className='text-left hover:text-[#00bfa5] '>
                   Tài khoản của tôi
                 </Link>
                 <Link to={'/'} className='text-left hover:text-[#00bfa5] '>
@@ -115,6 +115,22 @@ export default function Header() {
                 <div className='mx-3 mb-2 capitalize text-gray-400'>sản phẩm mới thêm</div>
 
                 <div>
+                  <div className='grid grid-cols-6 items-start gap-4 p-2 hover:bg-slate-100'>
+                    <div className='col-span-1 h-fit w-fit'>
+                      <img
+                        src='https://down-vn.img.susercontent.com/file/ac3bb3f56c5d7e3e157e300f6753aa65_tn'
+                        alt='product'
+                        className='w-full object-cover'
+                      />
+                    </div>
+                    <div className='col-span-4 mr-5'>
+                      <div className='truncate'>Kính râm nam phân cực thời trang trang trang trang trang trang </div>
+                    </div>
+                    <div className='col-span-1 flex items-start justify-end text-orange'>
+                      <span className='mr-[2px] text-[10px] underline'>đ</span>
+                      <span>580.000</span>
+                    </div>
+                  </div>
                   <div className='grid grid-cols-6 items-start gap-4 p-2 hover:bg-slate-100'>
                     <div className='col-span-1 h-fit w-fit'>
                       <img
