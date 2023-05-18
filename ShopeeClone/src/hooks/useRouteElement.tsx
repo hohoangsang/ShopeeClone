@@ -1,4 +1,6 @@
+import { useContext } from 'react';
 import { Navigate, Outlet, useRoutes } from 'react-router-dom';
+import { AppContext } from 'src/contexts/app.context';
 import AuthLayout from 'src/layouts/AuthLayout';
 import MainLayout from 'src/layouts/MainLayout';
 import Login from 'src/pages/Login';
@@ -6,13 +8,14 @@ import ProductList from 'src/pages/ProductList';
 import Profile from 'src/pages/Profile';
 import Register from 'src/pages/Register';
 
-const isAuthentication = true;
-
 function ProtectedRoute() {
+  const { isAuthentication } = useContext(AppContext);
+
   return isAuthentication ? <Outlet /> : <Navigate to={'/login'} />; //chưa dăng nhập thì đá ra màn hình login, đã đăng nhập thì tiếp tục render route con
 }
 
 function RejectedRoute() {
+  const { isAuthentication } = useContext(AppContext);
   return !isAuthentication ? <Outlet /> : <Navigate to={'/'} />; //đã dăng nhập thì đá ra màn hình chính, chưa đăng nhập thì tiếp tục render route con
 }
 
