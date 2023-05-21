@@ -1,7 +1,7 @@
 import { User } from './user.type';
-import { ResponseType } from './utils.type';
+import { ResponseSuccessType } from './utils.type';
 
-export type AuthResponse = ResponseType<{
+export type AuthResponse = ResponseSuccessType<{
   access_token: string;
   expires: number;
   refresh_token: string;

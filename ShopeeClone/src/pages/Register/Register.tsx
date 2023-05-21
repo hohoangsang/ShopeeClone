@@ -7,7 +7,10 @@ import { useMutation } from '@tanstack/react-query';
 import { registerAccount } from 'src/api/auth.api';
 import { omit } from 'lodash';
 import { isAxiosErrorUnprocessableEntity } from 'src/utils/utils';
-import { ResponseType } from 'src/types/utils.type';
+import { ResponseErrorType } from 'src/types/utils.type';
+import { useContext } from 'react';
+import { AppContext } from 'src/contexts/app.context';
+import Button from 'src/components/Button';
 
 export default function Register() {
   const {
@@ -21,6 +24,7 @@ export default function Register() {
     resolver: yupResolver(registerSchema)
   });
 
+  const { setIsAuthenticated } = useContext(AppContext);
   const registerAccountMutation = useMutation({
     mutationFn: (body: Omit<RegisterSchema, 'confirm_password'>) => {
       return registerAccount(body);
@@ -30,11 +34,13 @@ export default function Register() {
   const onSubmit = handleSubmit((data) => {
     const body = omit(data, ['confirm_password']);
     registerAccountMutation.mutate(body, {
-      onSuccess: (data) => {
-        console.log(data);
+      onSuccess: (result) => {
+        const { access_token } = result.data.data;
+
+        setIsAuthenticated(Boolean(access_token));
       },
       onError: (error) => {
-        if (isAxiosErrorUnprocessableEntity<ResponseType<Omit<RegisterSchema, 'confirm_password'>>>(error)) {
+        if (isAxiosErrorUnprocessableEntity<ResponseErrorType<Omit<RegisterSchema, 'confirm_password'>>>(error)) {
           const formError = error.response?.data.data;
 
           if (formError) {
@@ -95,9 +101,13 @@ export default function Register() {
                 />
               </div>
 
-              <button type='submit' className='mt-5 w-full rounded-sm bg-orange px-2 py-4 text-white'>
-                Đăng ký
-              </button>
+              <Button
+                isLoading={registerAccountMutation.isLoading}
+                disabled={registerAccountMutation.isLoading}
+                text='Đăng ký'
+                type='submit'
+                className='mt-5 flex w-full items-center justify-center rounded-sm bg-orange px-2 py-4 text-white'
+              />
 
               <div className='mt-8 flex justify-center'>
                 <span className='mr-1 text-gray-400'>Bạn đã có tài khoản?</span>

@@ -1,7 +1,24 @@
 import { Link } from 'react-router-dom';
 import Popover from '../Popover';
+import { useMutation } from '@tanstack/react-query';
+import { logoutAccount } from 'src/api/auth.api';
+import { useContext } from 'react';
+import { AppContext } from 'src/contexts/app.context';
 
 export default function Header() {
+  const { isAuthenticated, setIsAuthenticated } = useContext(AppContext);
+
+  const logoutMutation = useMutation({
+    mutationFn: () => logoutAccount(),
+    onSuccess: () => {
+      setIsAuthenticated(false);
+    }
+  });
+
+  const handleLogout = () => {
+    logoutMutation.mutate();
+  };
+
   return (
     <div className='bg-orange'>
       <div className='container'>
@@ -44,30 +61,46 @@ export default function Header() {
             </svg>
           </Popover>
 
-          <Popover
-            renderPopover={
-              <div className='flex flex-col gap-x-4 gap-y-6 py-2 pl-3 pr-20'>
-                <Link to={'/profile'} className='text-left hover:text-[#00bfa5] '>
-                  Tài khoản của tôi
-                </Link>
-                <Link to={'/'} className='text-left hover:text-[#00bfa5] '>
-                  Đơn mua
-                </Link>
-                <button className='text-left hover:text-[#00bfa5] '>Đăng xuất</button>
+          {isAuthenticated && (
+            <Popover
+              renderPopover={
+                <div className='flex flex-col gap-x-4 gap-y-6 py-2 pl-3 pr-20'>
+                  <Link to={'/profile'} className='text-left hover:text-[#00bfa5] '>
+                    Tài khoản của tôi
+                  </Link>
+                  <Link to={'/'} className='text-left hover:text-[#00bfa5] '>
+                    Đơn mua
+                  </Link>
+                  <button onClick={handleLogout} className='text-left hover:text-[#00bfa5] '>
+                    Đăng xuất
+                  </button>
+                </div>
+              }
+              className='ml-4 flex cursor-pointer items-center text-sm text-white hover:text-gray-300'
+            >
+              <div className='h-6 w-6'>
+                <img
+                  src='https://down-vn.img.susercontent.com/file/13dc547563539af96b776efa692f5091_tn'
+                  alt='avatar'
+                  className='w-full flex-shrink rounded-full object-cover'
+                />
               </div>
-            }
-            className='ml-4 flex cursor-pointer items-center text-sm text-white hover:text-gray-300'
-          >
-            <div className='h-6 w-6'>
-              <img
-                src='https://down-vn.img.susercontent.com/file/13dc547563539af96b776efa692f5091_tn'
-                alt='avatar'
-                className='w-full flex-shrink rounded-full object-cover'
-              />
-            </div>
 
-            <span className='mx-1'>Hồ Hoàng Sang</span>
-          </Popover>
+              <span className='mx-1'>Hồ Hoàng Sang</span>
+            </Popover>
+          )}
+
+          {!isAuthenticated && (
+            <div className='ml-4 flex items-center text-sm text-white'>
+              <Link to={'/register'} className='capitalize hover:text-gray-300'>
+                Đăng ký
+              </Link>
+              <span className='mx-2 font-thin text-gray-200'>|</span>
+              <Link to={'/login'} className='capitalize hover:text-gray-300'>
+                Đăng nhập
+              </Link>
+            </div>
+          )}
         </div>
 
         <div className='grid grid-cols-12 items-end gap-4'>

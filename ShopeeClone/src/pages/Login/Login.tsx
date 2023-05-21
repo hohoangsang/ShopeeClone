@@ -6,7 +6,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation } from '@tanstack/react-query';
 import { loginAccount } from 'src/api/auth.api';
 import { isAxiosErrorUnprocessableEntity } from 'src/utils/utils';
-import { ResponseType } from 'src/types/utils.type';
+import { ResponseErrorType } from 'src/types/utils.type';
+import { useContext } from 'react';
+import { AppContext } from 'src/contexts/app.context';
+import Button from 'src/components/Button';
 
 export default function Login() {
   const {
@@ -24,14 +27,19 @@ export default function Login() {
     }
   });
 
+  const { setIsAuthenticated } = useContext(AppContext);
+
   const onSubmit = handleSubmit((data) => {
     loginAccountMutation.mutate(data, {
-      onSuccess: (data) => {
-        //set token and refresh token into cookie
-        console.log(data);
+      onSuccess: (result) => {
+        //set token and refresh token into LS
+
+        const { access_token } = result.data.data;
+
+        setIsAuthenticated(Boolean(access_token));
       },
       onError: (error) => {
-        if (isAxiosErrorUnprocessableEntity<ResponseType<LoginSchema>>(error)) {
+        if (isAxiosErrorUnprocessableEntity<ResponseErrorType<LoginSchema>>(error)) {
           const formError = error.response?.data.data;
 
           if (formError) {
@@ -74,9 +82,13 @@ export default function Login() {
               />
             </div>
 
-            <button type='submit' className='mt-5 w-full rounded-sm bg-orange px-2 py-4 text-white'>
-              Đăng nhập
-            </button>
+            <Button
+              isLoading={loginAccountMutation.isLoading}
+              disabled={loginAccountMutation.isLoading}
+              text='Đăng nhập'
+              type='submit'
+              className='mt-5 flex w-full items-center justify-center rounded-sm bg-orange px-2 py-4 text-white'
+            />
 
             <div className='mt-8 flex justify-center'>
               <span className='mr-1 text-gray-400'>Bạn chưa có tài khoản?</span>

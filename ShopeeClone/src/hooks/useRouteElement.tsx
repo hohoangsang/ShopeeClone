@@ -9,14 +9,14 @@ import Profile from 'src/pages/Profile';
 import Register from 'src/pages/Register';
 
 function ProtectedRoute() {
-  const { isAuthentication } = useContext(AppContext);
+  const { isAuthenticated } = useContext(AppContext);
 
-  return isAuthentication ? <Outlet /> : <Navigate to={'/login'} />; //chưa dăng nhập thì đá ra màn hình login, đã đăng nhập thì tiếp tục render route con
+  return isAuthenticated ? <Outlet /> : <Navigate to={'/login'} />; //chưa dăng nhập thì đá ra màn hình login, đã đăng nhập thì tiếp tục render route con
 }
 
 function RejectedRoute() {
-  const { isAuthentication } = useContext(AppContext);
-  return !isAuthentication ? <Outlet /> : <Navigate to={'/'} />; //đã dăng nhập thì đá ra màn hình chính, chưa đăng nhập thì tiếp tục render route con
+  const { isAuthenticated } = useContext(AppContext);
+  return !isAuthenticated ? <Outlet /> : <Navigate to={'/'} />; //đã dăng nhập thì đá ra màn hình chính, chưa đăng nhập thì tiếp tục render route con
 }
 
 export default function useRouteElement() {
