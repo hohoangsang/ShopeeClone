@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import { Navigate, Outlet, useRoutes } from 'react-router-dom';
+import { path } from 'src/constants/path';
 import { AppContext } from 'src/contexts/app.context';
 import AuthLayout from 'src/layouts/AuthLayout';
 import MainLayout from 'src/layouts/MainLayout';
@@ -26,7 +27,7 @@ export default function useRouteElement() {
       element: <ProtectedRoute />,
       children: [
         {
-          path: '/profile',
+          path: path.profile,
           element: (
             <MainLayout>
               <Profile />
@@ -40,7 +41,7 @@ export default function useRouteElement() {
       element: <RejectedRoute />,
       children: [
         {
-          path: '/login',
+          path: path.login,
           element: (
             <AuthLayout>
               <Login />
@@ -48,7 +49,7 @@ export default function useRouteElement() {
           )
         },
         {
-          path: '/register',
+          path: path.register,
           element: (
             <AuthLayout>
               <Register />
@@ -58,7 +59,7 @@ export default function useRouteElement() {
       ]
     },
     {
-      path: '/',
+      path: path.home,
       index: true, //Phân biệt đây là route chính để không bị trùng lặp với các kiểu path là ''
       element: (
         <MainLayout>

@@ -27,16 +27,17 @@ export default function Login() {
     }
   });
 
-  const { setIsAuthenticated } = useContext(AppContext);
+  const { setIsAuthenticated, setProfile } = useContext(AppContext);
 
   const onSubmit = handleSubmit((data) => {
     loginAccountMutation.mutate(data, {
       onSuccess: (result) => {
         //set token and refresh token into LS
 
-        const { access_token } = result.data.data;
+        const { access_token, user } = result.data.data;
 
         setIsAuthenticated(Boolean(access_token));
+        setProfile(user);
       },
       onError: (error) => {
         if (isAxiosErrorUnprocessableEntity<ResponseErrorType<LoginSchema>>(error)) {

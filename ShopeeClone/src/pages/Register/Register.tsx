@@ -24,7 +24,7 @@ export default function Register() {
     resolver: yupResolver(registerSchema)
   });
 
-  const { setIsAuthenticated } = useContext(AppContext);
+  const { setIsAuthenticated, setProfile } = useContext(AppContext);
   const registerAccountMutation = useMutation({
     mutationFn: (body: Omit<RegisterSchema, 'confirm_password'>) => {
       return registerAccount(body);
@@ -35,9 +35,10 @@ export default function Register() {
     const body = omit(data, ['confirm_password']);
     registerAccountMutation.mutate(body, {
       onSuccess: (result) => {
-        const { access_token } = result.data.data;
+        const { access_token, user } = result.data.data;
 
         setIsAuthenticated(Boolean(access_token));
+        setProfile(user);
       },
       onError: (error) => {
         if (isAxiosErrorUnprocessableEntity<ResponseErrorType<Omit<RegisterSchema, 'confirm_password'>>>(error)) {
