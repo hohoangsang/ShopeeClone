@@ -4,7 +4,7 @@ import { LoginSchema, loginSchema } from 'src/utils/rules';
 import Input from 'src/components/Form/Input';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation } from '@tanstack/react-query';
-import { loginAccount } from 'src/api/auth.api';
+import { authApi } from 'src/api/auth.api';
 import { isAxiosErrorUnprocessableEntity } from 'src/utils/utils';
 import { ResponseErrorType } from 'src/types/utils.type';
 import { useContext } from 'react';
@@ -23,7 +23,7 @@ export default function Login() {
 
   const loginAccountMutation = useMutation({
     mutationFn: (body: LoginSchema) => {
-      return loginAccount(body);
+      return authApi.loginAccount(body);
     }
   });
 

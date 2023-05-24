@@ -1,14 +1,16 @@
 import { AuthResponse } from 'src/types/auth.type';
 import api from './api';
 
-export const registerAccount = (body: { email: string; password: string }) => {
-  return api.post<AuthResponse>('/register', body);
-};
+export const authApi = {
+  registerAccount: (body: { email: string; password: string }) => {
+    return api.post<AuthResponse>('/register', body);
+  },
 
-export const loginAccount = (body: { email: string; password: string }) => {
-  return api.post<AuthResponse>('/login', body);
-};
+  loginAccount: (body: { email: string; password: string }) => {
+    return api.post<AuthResponse>('/login', body);
+  },
 
-export const logoutAccount = () => {
-  return api.post('/logout');
+  logoutAccount: () => {
+    return api.post('/logout');
+  }
 };
