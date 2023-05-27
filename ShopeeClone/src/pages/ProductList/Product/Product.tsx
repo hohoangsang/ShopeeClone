@@ -1,7 +1,5 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
-import NonStarFilled from 'src/components/Star/NonStarFilled';
-import StarFilled from 'src/components/Star/StarFilled';
+import ProductRating from 'src/components/ProductRating';
 import { Product as ProductType } from 'src/types/product.type';
 import { formatCurrency, formatNumberToSocialStyle } from 'src/utils/utils';
 
@@ -40,43 +38,7 @@ export default function Product({ product }: Props) {
 
           <div className='mt-3'>
             <div className='flex items-center gap-2'>
-              <div className='flex items-end gap-[2px]'>
-                <div className='relative'>
-                  <div className='absolute left-0 top-0 h-full overflow-hidden' style={{ width: '100%' }}>
-                    <StarFilled />
-                  </div>
-
-                  <NonStarFilled />
-                </div>
-                <div className='relative'>
-                  <div className='absolute left-0 top-0 h-full overflow-hidden' style={{ width: '100%' }}>
-                    <StarFilled />
-                  </div>
-
-                  <NonStarFilled />
-                </div>
-                <div className='relative'>
-                  <div className='absolute left-0 top-0 h-full overflow-hidden' style={{ width: '100%' }}>
-                    <StarFilled />
-                  </div>
-
-                  <NonStarFilled />
-                </div>
-                <div className='relative'>
-                  <div className='absolute left-0 top-0 h-full overflow-hidden' style={{ width: '100%' }}>
-                    <StarFilled />
-                  </div>
-
-                  <NonStarFilled />
-                </div>
-                <div className='relative'>
-                  <div className='absolute left-0 top-0 h-full overflow-hidden' style={{ width: '50%' }}>
-                    <StarFilled />
-                  </div>
-
-                  <NonStarFilled />
-                </div>
-              </div>
+              <ProductRating rating={product.rating} />
 
               <div>
                 Đã bán <span>{formatNumberToSocialStyle(product.sold)}</span>
