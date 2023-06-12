@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AsideFilter from './AsideFilter';
 import SortProduct from './SortProduct';
 import Product from './Product';
 import { useQuery } from '@tanstack/react-query';
 import { productApi } from 'src/api/product.api';
 import { useQueryParams } from 'src/hooks/useQueryParams';
+import Pagination from 'src/components/Pagination';
 
 export default function ProductList() {
   const queryParams = useQueryParams();
+  const [page, setPage] = useState(1);
 
   const { data } = useQuery({
     queryKey: ['productList', queryParams],
@@ -15,8 +17,6 @@ export default function ProductList() {
       return productApi.getProductList(queryParams);
     }
   });
-
-  console.log(data);
 
   return (
     <div className='bg-gray-100 py-3'>
@@ -31,6 +31,7 @@ export default function ProductList() {
             <div className='mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
               {data && data.data.data.products.map((product) => <Product key={product._id} product={product} />)}
             </div>
+            <Pagination page={page} setPage={setPage} pageSize={20} />
           </div>
         </div>
       </div>
