@@ -89,7 +89,7 @@ export default function Pagination({ pageSize, queryConfig }: Props) {
   return (
     <div className='mt-6 flex flex-wrap items-center justify-center gap-2'>
       {page == 1 ? (
-        <span className='flex cursor-not-allowed items-center rounded-sm border border-gray-300 bg-white/60 px-3 py-2 outline-none'>
+        <span className='flex cursor-not-allowed items-center rounded-sm border border-gray-300 bg-slate-100 px-3 py-2 outline-none'>
           Prev
         </span>
       ) : (
@@ -108,7 +108,7 @@ export default function Pagination({ pageSize, queryConfig }: Props) {
       )}
       {renderPagination()}
       {page == pageSize ? (
-        <span className='flex cursor-not-allowed items-center rounded-sm border border-gray-300 bg-white/60 px-3 py-2 outline-none'>
+        <span className='flex cursor-not-allowed items-center rounded-sm border border-gray-300 bg-slate-100 px-3 py-2 outline-none'>
           Next
         </span>
       ) : (
