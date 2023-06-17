@@ -12,15 +12,13 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 export default function Input(props: InputProps) {
   const {
     errorMessage,
-    placeholder,
     register,
     rules,
-    type,
     name,
-    autoComplete,
     classNameInput = 'w-full rounded-sm border border-gray-300 p-3 shadow-sm outline-none focus:border-gray-500',
     classNameError = 'mt-1 min-h-[1.25rem] text-red-500',
-    className
+    className,
+    ...rest
   } = props;
 
   const registerInput = register && name ? register(name, rules) : {};
@@ -28,13 +26,7 @@ export default function Input(props: InputProps) {
   return (
     <React.Fragment>
       <div className={className}>
-        <input
-          type={type}
-          className={classNameInput}
-          placeholder={placeholder}
-          autoComplete={autoComplete}
-          {...registerInput}
-        />
+        <input className={classNameInput} {...registerInput} {...rest} />
 
         <div className={classNameError}>{errorMessage}</div>
       </div>

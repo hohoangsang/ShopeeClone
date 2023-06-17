@@ -1,13 +1,29 @@
-import { Link } from 'react-router-dom';
+import { Link, createSearchParams } from 'react-router-dom';
 import Button from 'src/components/Button';
 import Input from 'src/components/Form/Input';
 import NonStarFilled from 'src/components/Star/NonStarFilled';
 import StarFilled from 'src/components/Star/StarFilled';
+import { QueryConfig } from '../ProductList';
+import { Category } from 'src/types/category.type';
+import classNames from 'classnames';
+import { path } from 'src/constants/path';
 
-export default function AsideFilter() {
+interface Props {
+  queryConfig: QueryConfig;
+  categories: Category[];
+}
+
+export default function AsideFilter({ categories, queryConfig }: Props) {
+  const { category } = queryConfig;
+
   return (
     <div>
-      <Link to={'/'} className='flex items-center gap-2 font-semibold'>
+      <Link
+        to={path.home}
+        className={classNames('flex items-center gap-2 font-semibold', {
+          'text-orange': !category
+        })}
+      >
         <svg viewBox='0 0 12 10' className='h-3 w-4 shrink-0 fill-current'>
           <g fillRule='evenodd' stroke='none' strokeWidth={1}>
             <g transform='translate(-373 -208)'>
@@ -29,44 +45,34 @@ export default function AsideFilter() {
 
       <div className='mb-10 text-sm'>
         <ul className='font-sm'>
-          <li className='ml-3 mt-4'>
-            <Link to={'/'} className='relative capitalize text-orange'>
-              <svg viewBox='0 0 4 7' className='absolute -left-3 top-1 h-2 w-2 fill-current'>
-                <polygon points='4 3.5 0 0 0 7'></polygon>
-              </svg>
-              Đồng hồ
-            </Link>
-          </li>
-          <li className='ml-3 mt-4'>
-            <Link to={'/'} className='relative capitalize'>
-              Đồng hồ nam
-            </Link>
-          </li>
-          <li className='ml-3 mt-4'>
-            <Link to={'/'} className='relative capitalize'>
-              Đồng hồ nữ
-            </Link>
-          </li>
-          <li className='ml-3 mt-4'>
-            <Link to={'/'} className='relative capitalize'>
-              Bộ đồng hộ & đồng hồ cặp
-            </Link>
-          </li>
-          <li className='ml-3 mt-4'>
-            <Link to={'/'} className='relative capitalize'>
-              Đồng hồ trẻ em
-            </Link>
-          </li>
-          <li className='ml-3 mt-4'>
-            <Link to={'/'} className='relative capitalize'>
-              Phụ kiện đồng hộ
-            </Link>
-          </li>
-          <li className='ml-3 mt-4'>
-            <Link to={'/'} className='relative capitalize'>
-              Khác
-            </Link>
-          </li>
+          {categories.map((categoryItem) => {
+            const isActive = categoryItem._id === category;
+
+            return (
+              <li key={categoryItem._id} className='ml-3 mt-4'>
+                <Link
+                  to={{
+                    pathname: path.home,
+                    search: createSearchParams({
+                      ...queryConfig,
+                      page: '1',
+                      category: categoryItem._id
+                    }).toString()
+                  }}
+                  className={classNames('relative  capitalize', {
+                    'font-semibold text-orange': isActive
+                  })}
+                >
+                  {isActive && (
+                    <svg viewBox='0 0 4 7' className='absolute -left-3 top-1 h-2 w-2 fill-current'>
+                      <polygon points='4 3.5 0 0 0 7'></polygon>
+                    </svg>
+                  )}
+                  {categoryItem.name}
+                </Link>
+              </li>
+            );
+          })}
         </ul>
       </div>
 

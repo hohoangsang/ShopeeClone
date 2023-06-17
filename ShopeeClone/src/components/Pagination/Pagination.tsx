@@ -22,10 +22,7 @@ export default function Pagination({ pageSize, queryConfig }: Props) {
         dotsAfter = true;
 
         return (
-          <span
-            key={index}
-            className='flex items-center rounded-sm border border-gray-300 bg-white px-3 py-2 outline-none'
-          >
+          <span key={index} className='flex items-center bg-transparent px-3 py-2 outline-none'>
             ...
           </span>
         );
@@ -37,10 +34,7 @@ export default function Pagination({ pageSize, queryConfig }: Props) {
       if (!dotsBefore) {
         dotsBefore = true;
         return (
-          <span
-            key={index}
-            className='flex items-center rounded-sm border border-gray-300 bg-white px-3 py-2 outline-none'
-          >
+          <span key={index} className='flex items-center bg-transparent px-3 py-2 outline-none'>
             ...
           </span>
         );
@@ -75,9 +69,9 @@ export default function Pagination({ pageSize, queryConfig }: Props) {
               }).toString()
             }}
             key={index}
-            className={classNames('flex items-center rounded-sm border bg-white px-3 py-2 outline-none', {
-              'border-orange/80': page === pageNum,
-              'border-gray-300': page !== pageNum
+            className={classNames('flex items-center rounded-lg px-4 py-1 text-lg outline-none', {
+              'bg-orange text-white': page === pageNum,
+              'bg-transparentsparent text-slate-600': page !== pageNum
             })}
           >
             {pageNum}
@@ -87,10 +81,19 @@ export default function Pagination({ pageSize, queryConfig }: Props) {
   };
 
   return (
-    <div className='mt-6 flex flex-wrap items-center justify-center gap-2'>
+    <div className='mt-6 flex flex-wrap items-center justify-center gap-4'>
       {page == 1 ? (
-        <span className='flex cursor-not-allowed items-center rounded-sm border border-gray-300 bg-slate-100 px-3 py-2 outline-none'>
-          Prev
+        <span className='flex cursor-not-allowed items-center rounded-sm px-3 py-2 outline-none'>
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            fill='none'
+            viewBox='0 0 24 24'
+            strokeWidth={1.5}
+            stroke='currentColor'
+            className='h-5 w-5 text-slate-600'
+          >
+            <path strokeLinecap='round' strokeLinejoin='round' d='M15.75 19.5L8.25 12l7.5-7.5' />
+          </svg>
         </span>
       ) : (
         <Link
@@ -101,15 +104,33 @@ export default function Pagination({ pageSize, queryConfig }: Props) {
               page: (page - 1).toString()
             }).toString()
           }}
-          className='flex items-center rounded-sm border border-gray-300 bg-white px-3 py-2 outline-none'
+          className='flex items-center rounded-sm px-3 py-2 outline-none'
         >
-          Prev
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            fill='none'
+            viewBox='0 0 24 24'
+            strokeWidth={1.5}
+            stroke='currentColor'
+            className='h-5 w-5 text-slate-600'
+          >
+            <path strokeLinecap='round' strokeLinejoin='round' d='M15.75 19.5L8.25 12l7.5-7.5' />
+          </svg>
         </Link>
       )}
       {renderPagination()}
       {page == pageSize ? (
-        <span className='flex cursor-not-allowed items-center rounded-sm border border-gray-300 bg-slate-100 px-3 py-2 outline-none'>
-          Next
+        <span className='flex cursor-not-allowed items-center rounded-sm px-3 py-2 outline-none'>
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            fill='none'
+            viewBox='0 0 24 24'
+            strokeWidth={1.5}
+            stroke='currentColor'
+            className='h-5 w-5 text-slate-600'
+          >
+            <path strokeLinecap='round' strokeLinejoin='round' d='M8.25 4.5l7.5 7.5-7.5 7.5' />
+          </svg>
         </span>
       ) : (
         <Link
@@ -120,9 +141,18 @@ export default function Pagination({ pageSize, queryConfig }: Props) {
               page: (page + 1).toString()
             }).toString()
           }}
-          className='flex items-center rounded-sm border border-gray-300 bg-white px-3 py-2 outline-none'
+          className='flex items-center rounded-sm px-3 py-2 outline-none'
         >
-          Next
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            fill='none'
+            viewBox='0 0 24 24'
+            strokeWidth={1.5}
+            stroke='currentColor'
+            className='h-5 w-5 text-slate-600'
+          >
+            <path strokeLinecap='round' strokeLinejoin='round' d='M8.25 4.5l7.5 7.5-7.5 7.5' />
+          </svg>
         </Link>
       )}
     </div>
