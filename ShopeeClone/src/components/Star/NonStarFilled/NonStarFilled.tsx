@@ -1,23 +1,16 @@
 import React from 'react';
 
 export default function NonStarFilled(props: { className?: string }) {
-  const { className = 'h-3 w-3' } = props;
+  const { className = 'h-3 w-3 fill-current text-gray-300' } = props;
 
   return (
-    <svg viewBox='0 0 30 30' className={className}>
-      <defs>
-        <linearGradient id='star__hollow' x1='50%' x2='50%' y1='0%' y2='99.0177926%'>
-          <stop offset='0%' stopColor='#FFD211'></stop>
-          <stop offset='100%' stopColor='#FFAD27'></stop>
-        </linearGradient>
-      </defs>
-      <path
-        fill='none'
-        fillRule='evenodd'
-        stroke='url(#star__hollow)'
-        strokeWidth='2'
-        d='M23.226809 28.390899l-1.543364-9.5505903 6.600997-6.8291523-9.116272-1.4059447-4.01304-8.63019038-4.013041 8.63019038-9.116271 1.4059447 6.600997 6.8291523-1.543364 9.5505903 8.071679-4.5038874 8.071679 4.5038874z'
-      ></path>
+    <svg enableBackground='new 0 0 15 15' viewBox='0 0 15 15' x={0} y={0} className={className}>
+      <polygon
+        points='7.5 .8 9.7 5.4 14.5 5.9 10.7 9.1 11.8 14.2 7.5 11.6 3.2 14.2 4.3 9.1 .5 5.9 5.3 5.4'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+        strokeMiterlimit={10}
+      />
     </svg>
   );
 }
