@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { LoginSchema, loginSchema } from 'src/utils/rules';
+import { Schema, schema } from 'src/utils/rules';
 import Input from 'src/components/Form/Input';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation } from '@tanstack/react-query';
@@ -11,18 +11,22 @@ import { useContext } from 'react';
 import { AppContext } from 'src/contexts/app.context';
 import Button from 'src/components/Button';
 
+type FormData = Pick<Schema, 'email' | 'password'>;
+
+const loginSchema = schema.pick(['email', 'password']);
+
 export default function Login() {
   const {
     formState: { errors },
     register,
     handleSubmit,
     setError
-  } = useForm<LoginSchema>({
+  } = useForm<FormData>({
     resolver: yupResolver(loginSchema)
   });
 
   const loginAccountMutation = useMutation({
-    mutationFn: (body: LoginSchema) => {
+    mutationFn: (body: FormData) => {
       return authApi.loginAccount(body);
     }
   });
@@ -40,13 +44,13 @@ export default function Login() {
         setProfile(user);
       },
       onError: (error) => {
-        if (isAxiosErrorUnprocessableEntity<ResponseErrorType<LoginSchema>>(error)) {
+        if (isAxiosErrorUnprocessableEntity<ResponseErrorType<FormData>>(error)) {
           const formError = error.response?.data.data;
 
           if (formError) {
             Object.keys(formError).forEach((key) => {
-              setError(key as keyof LoginSchema, {
-                message: formError[key as keyof LoginSchema],
+              setError(key as keyof FormData, {
+                message: formError[key as keyof FormData],
                 type: 'Server'
               });
             });

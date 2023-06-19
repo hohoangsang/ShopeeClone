@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import Input from 'src/components/Form/Input';
-import { RegisterSchema, registerSchema } from 'src/utils/rules';
+import { Schema, schema } from 'src/utils/rules';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation } from '@tanstack/react-query';
 import { authApi } from 'src/api/auth.api';
@@ -12,6 +12,10 @@ import { useContext } from 'react';
 import { AppContext } from 'src/contexts/app.context';
 import Button from 'src/components/Button';
 
+type FormData = Pick<Schema, 'email' | 'password' | 'confirm_password'>;
+
+const registerSchema = schema.pick(['confirm_password', 'email', 'password']);
+
 export default function Register() {
   const {
     handleSubmit,
@@ -20,13 +24,13 @@ export default function Register() {
     watch, //method này dùng để lấy dữ liệu trong ô input nhưng làm cho component re-render trong suốt quá trình change input
     getValues, //method này dùng để lấy dữ liệu trong ô input và ko làm cho component re-render
     formState: { errors }
-  } = useForm<RegisterSchema>({
+  } = useForm<FormData>({
     resolver: yupResolver(registerSchema)
   });
 
   const { setIsAuthenticated, setProfile } = useContext(AppContext);
   const registerAccountMutation = useMutation({
-    mutationFn: (body: Omit<RegisterSchema, 'confirm_password'>) => {
+    mutationFn: (body: Omit<FormData, 'confirm_password'>) => {
       return authApi.registerAccount(body);
     }
   });
@@ -41,15 +45,15 @@ export default function Register() {
         setProfile(user);
       },
       onError: (error) => {
-        if (isAxiosErrorUnprocessableEntity<ResponseErrorType<Omit<RegisterSchema, 'confirm_password'>>>(error)) {
+        if (isAxiosErrorUnprocessableEntity<ResponseErrorType<Omit<FormData, 'confirm_password'>>>(error)) {
           const formError = error.response?.data.data;
 
           if (formError) {
             Object.keys(formError).forEach((key) => {
               setError(
-                key as keyof Omit<RegisterSchema, 'confirm_password'>,
+                key as keyof Omit<FormData, 'confirm_password'>,
                 {
-                  message: formError[key as keyof Omit<RegisterSchema, 'confirm_password'>],
+                  message: formError[key as keyof Omit<FormData, 'confirm_password'>],
                   type: 'Server'
                 },
                 {

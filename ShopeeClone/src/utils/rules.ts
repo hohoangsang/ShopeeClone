@@ -78,10 +78,4 @@ export const schema = yup.object({
     .oneOf([yup.ref('password')], 'Confirm password not match with password!')
 });
 
-export const registerSchema = schema.pick(['email', 'password', 'confirm_password']);
-
-export const loginSchema = schema.pick(['email', 'password']);
-
-export type RegisterSchema = yup.InferType<typeof registerSchema>;
-
-export type LoginSchema = yup.InferType<typeof loginSchema>;
+export type Schema = yup.InferType<typeof schema>;

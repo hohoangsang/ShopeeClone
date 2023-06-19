@@ -1,12 +1,12 @@
-import { Link, createSearchParams } from 'react-router-dom';
+import classNames from 'classnames';
+import { Link, createSearchParams, useNavigate } from 'react-router-dom';
 import Button from 'src/components/Button';
 import Input from 'src/components/Form/Input';
-import NonStarFilled from 'src/components/Star/NonStarFilled';
-import StarFilled from 'src/components/Star/StarFilled';
-import { QueryConfig } from '../ProductList';
-import { Category } from 'src/types/category.type';
-import classNames from 'classnames';
 import { path } from 'src/constants/path';
+import { Category } from 'src/types/category.type';
+import { QueryConfig } from '../ProductList';
+import RatingStar from './RatingStar';
+import { omit } from 'lodash';
 
 interface Props {
   queryConfig: QueryConfig;
@@ -15,6 +15,23 @@ interface Props {
 
 export default function AsideFilter({ categories, queryConfig }: Props) {
   const { category } = queryConfig;
+
+  const navigate = useNavigate();
+
+  const handleRemoveAll = () => {
+    navigate({
+      pathname: path.home,
+      search: createSearchParams(
+        omit(
+          {
+            ...queryConfig,
+            page: '1'
+          },
+          ['rating_filter', 'category', 'price_min', 'price_max']
+        )
+      ).toString()
+    });
+  };
 
   return (
     <div>
@@ -132,57 +149,7 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
       <div className='text-sm'>
         <span className='capitalize'>Đánh giá</span>
 
-        <ul>
-          <li className='mt-4 flex cursor-pointer items-center gap-2'>
-            <div className='flex items-center gap-1'>
-              <StarFilled />
-              <StarFilled />
-              <StarFilled />
-              <StarFilled />
-              <StarFilled />
-            </div>
-          </li>
-          <li className='mt-4 flex cursor-pointer items-center gap-2'>
-            <div className='flex items-center gap-1'>
-              <StarFilled />
-              <StarFilled />
-              <StarFilled />
-              <StarFilled />
-              <NonStarFilled />
-            </div>
-            <span>trở lên</span>
-          </li>
-          <li className='mt-4 flex cursor-pointer items-center gap-2'>
-            <div className='flex items-center gap-1'>
-              <StarFilled />
-              <StarFilled />
-              <StarFilled />
-              <NonStarFilled />
-              <NonStarFilled />
-            </div>
-            <span>trở lên</span>
-          </li>
-          <li className='mt-4 flex cursor-pointer items-center gap-2'>
-            <div className='flex items-center gap-1'>
-              <StarFilled />
-              <StarFilled />
-              <NonStarFilled />
-              <NonStarFilled />
-              <NonStarFilled />
-            </div>
-            <span>trở lên</span>
-          </li>
-          <li className='mt-4 flex cursor-pointer items-center gap-2'>
-            <div className='flex items-center gap-1'>
-              <StarFilled />
-              <NonStarFilled />
-              <NonStarFilled />
-              <NonStarFilled />
-              <NonStarFilled />
-            </div>
-            <span>trở lên</span>
-          </li>
-        </ul>
+        <RatingStar queryConfig={queryConfig} />
       </div>
 
       <div className='my-4 h-[1px] bg-gray-200' />
@@ -190,6 +157,7 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
       <Button
         className='w-full rounded-sm border-none bg-orange px-3 py-2 text-sm uppercase text-white shadow-sm focus:bg-orange/80'
         text='Xóa tất cả'
+        onClick={handleRemoveAll}
       />
     </div>
   );
