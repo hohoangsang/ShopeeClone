@@ -75,7 +75,33 @@ export const schema = yup.object({
     .required('Please enter password!')
     .min(5, 'Length is 5-160 characters')
     .max(160, 'Length is 5-160 characters')
-    .oneOf([yup.ref('password')], 'Confirm password not match with password!')
+    .oneOf([yup.ref('password')], 'Confirm password not match with password!'),
+  price_min: yup.string().test({
+    name: 'price-not-allow',
+    message: 'Giá không hợp lệ',
+    test: function (value) {
+      const { price_max } = this.parent as { price_min: string; price_max: string };
+
+      if (price_max !== '' && value !== '') {
+        return Number(price_max) >= Number(value);
+      }
+
+      return price_max !== '' || value !== '';
+    }
+  }),
+  price_max: yup.string().test({
+    name: 'price-not-allow',
+    message: 'Giá không phù hợp',
+    test: function (value) {
+      const { price_min } = this.parent as { price_min: string; price_max: string };
+
+      if (price_min !== '' && value !== '') {
+        return Number(price_min) <= Number(value);
+      }
+
+      return price_min !== '' || value !== '';
+    }
+  })
 });
 
 export type Schema = yup.InferType<typeof schema>;

@@ -1,8 +1,8 @@
-import { ResponseSuccessType } from "src/types/utils.type";
-import api from "./api";
-import { Category } from "src/types/category.type";
+import { ResponseSuccessType } from 'src/types/utils.type';
+import api from './api';
+import { Category } from 'src/types/category.type';
 
-const URL = "/categories";
+const URL = '/categories';
 
 export const categoryApi = {
   getAll: () => {

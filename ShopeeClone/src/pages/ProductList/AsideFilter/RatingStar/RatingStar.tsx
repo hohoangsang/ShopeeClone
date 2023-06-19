@@ -44,9 +44,9 @@ export default function RatingStar({ queryConfig }: Props) {
                   }
                   return <NonStarFilled key={indexStar} />;
                 })}
-            </div>
 
-            {index !== 0 && <span>trở lên</span>}
+              {index !== 0 && <span>trở lên</span>}
+            </div>
           </li>
         ))}
     </ul>

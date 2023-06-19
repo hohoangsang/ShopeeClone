@@ -68,7 +68,7 @@ class Http {
         const { url } = response.config;
 
         if (url === path.login || url === path.register) {
-          const result = response.data as AuthResponse
+          const result = response.data as AuthResponse;
 
           const { access_token, user } = result.data;
           this.accessToken = access_token;
