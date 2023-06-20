@@ -7,6 +7,7 @@ export interface Product {
   quantity: number;
   sold: number;
   view: number;
+  description?: string;
   name: string;
   category: {
     _id: string;

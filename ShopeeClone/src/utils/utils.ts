@@ -22,3 +22,9 @@ export const formatNumberToSocialStyle = (value: number) => {
     .replace('.', ',')
     .toLowerCase();
 };
+
+export const saleRate = (oldPrice: number, salePrice: number) => {
+  const rating = Math.round((oldPrice - salePrice) * 100 / oldPrice);
+
+  return rating + "%"
+}
