@@ -24,7 +24,20 @@ export const formatNumberToSocialStyle = (value: number) => {
 };
 
 export const saleRate = (oldPrice: number, salePrice: number) => {
-  const rating = Math.round((oldPrice - salePrice) * 100 / oldPrice);
+  const rating = Math.round(((oldPrice - salePrice) * 100) / oldPrice);
 
-  return rating + "%"
-}
+  return rating + '%';
+};
+
+const removeSpecialCharacter = (str: string) =>
+  // eslint-disable-next-line no-useless-escape
+  str.replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g, '');
+
+export const generateNameId = ({ name, id }: { name: string; id: string }) => {
+  return removeSpecialCharacter(name).replaceAll(/\s/g, '-') + `-i-${id}`;
+};
+
+export const getIdFromNameId = (nameId: string) => {
+  const arr = nameId.split('-i-');
+  return arr[arr.length - 1];
+};
