@@ -5,8 +5,10 @@ import { useParams } from 'react-router-dom';
 import { productApi } from 'src/api/product.api';
 import InputNumber from 'src/components/Form/InputNumber';
 import ProductRating from 'src/components/ProductRating';
-import { Product } from 'src/types/product.type';
+import { ProductListConfig, Product as ProductType } from 'src/types/product.type';
 import { formatCurrency, formatNumberToSocialStyle, getIdFromNameId, saleRate } from 'src/utils/utils';
+import Product from '../ProductList/components/Product';
+import QuantityController from 'src/components/QuantityController';
 
 export default function ProductDetail() {
   const { nameId } = useParams();
@@ -18,7 +20,19 @@ export default function ProductDetail() {
     }
   });
 
+  const [buyCount, setBuyCount] = useState(1);
+
   const product = productDetailData?.data.data;
+
+  const queryConfig: ProductListConfig = { page: '1', limit: '20', category: product?.category._id };
+
+  const { data: productList } = useQuery({
+    queryKey: ['productListCategory', queryConfig],
+    queryFn: () => {
+      return productApi.getProductList(queryConfig);
+    },
+    enabled: Boolean(product)
+  });
 
   const imageRef = useRef<HTMLImageElement>(null);
 
@@ -27,7 +41,7 @@ export default function ProductDetail() {
   const [imageActived, setImageActived] = useState('');
 
   const currentImagesList = useMemo(() => {
-    return (product as Product)?.images.slice(...currentImagesIndex);
+    return (product as ProductType)?.images.slice(...currentImagesIndex);
   }, [product, currentImagesIndex]);
 
   useEffect(() => {
@@ -47,7 +61,7 @@ export default function ProductDetail() {
   };
 
   const nextSlice = () => {
-    if (currentImagesIndex[1] >= (product as Product)?.images.length) return;
+    if (currentImagesIndex[1] >= (product as ProductType)?.images.length) return;
 
     setCurrentImageIndex((prev) => [prev[0] + 1, prev[1] + 1]);
   };
@@ -78,6 +92,10 @@ export default function ProductDetail() {
 
   const handleRemoveZoom = () => {
     imageRef.current?.removeAttribute('style');
+  };
+
+  const handleChangeQuantity = (value: number) => {
+    setBuyCount(value);
   };
 
   if (!product) return null;
@@ -186,14 +204,13 @@ export default function ProductDetail() {
             <div className='mt-6 flex items-center'>
               <span className='capitalize text-gray-500'>số lượng</span>
 
-              <form className='ml-10 flex items-center'>
-                <button className='border-1 h-8 border border-r-0 px-2 text-xl text-gray-500 outline-none'>-</button>
-                <InputNumber
-                  classNameError='hidden'
-                  classNameInput='border-1 text w-[4rem] border px-2 h-8 text-center'
-                />
-                <button className='border-1 h-8 border border-l-0 px-2 text-xl text-gray-500 outline-none'>+</button>
-              </form>
+              <QuantityController
+                onDecrease={handleChangeQuantity}
+                onIncrease={handleChangeQuantity}
+                onType={handleChangeQuantity}
+                value={buyCount}
+                max={product.quantity}
+              />
 
               <span className='ml-5 text-gray-500'>{product.quantity} sản phẩm có sẵn</span>
             </div>
@@ -231,6 +248,19 @@ export default function ProductDetail() {
         <div className='p-3 text-sm leading-loose'>
           <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(product.description as string) }} />
         </div>
+      </div>
+
+      <div className='container mt-4'>
+        {productList && (
+          <div>
+            <div className='uppercase text-gray-500'>có thể bạn cũng thích</div>
+            <div className='mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6'>
+              {productList.data.data.products.map((product) => (
+                <Product key={product._id} product={product} />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

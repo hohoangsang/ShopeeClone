@@ -101,7 +101,8 @@ export const schema = yup.object({
 
       return price_min !== '' || value !== '';
     }
-  })
+  }),
+  searchName: yup.string().trim().required('Not valid search name!')
 });
 
 export type Schema = yup.InferType<typeof schema>;

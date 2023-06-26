@@ -1,13 +1,31 @@
-import { Link } from 'react-router-dom';
+import { Link, createSearchParams, useNavigate } from 'react-router-dom';
 import Popover from '../Popover';
 import { useMutation } from '@tanstack/react-query';
 import { authApi } from 'src/api/auth.api';
 import { useContext } from 'react';
 import { AppContext } from 'src/contexts/app.context';
 import { path } from 'src/constants/path';
+import useQueryConfig from 'src/hooks/useQueryConfig';
+import { useForm } from 'react-hook-form';
+import { Schema, schema } from 'src/utils/rules';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { omit } from 'lodash';
+
+type FormData = Pick<Schema, 'searchName'>;
+
+const searchSchema = schema.pick(['searchName']);
 
 export default function Header() {
   const { isAuthenticated, setIsAuthenticated, profile, setProfile } = useContext(AppContext);
+  const queryConfig = useQueryConfig();
+
+  const navigate = useNavigate();
+  const { handleSubmit, register } = useForm<FormData>({
+    values: {
+      searchName: queryConfig.name || ''
+    },
+    resolver: yupResolver(searchSchema)
+  });
 
   const logoutMutation = useMutation({
     mutationFn: () => authApi.logoutAccount(),
@@ -20,6 +38,30 @@ export default function Header() {
   const handleLogout = () => {
     logoutMutation.mutate();
   };
+
+  const handleSearchName = handleSubmit((data) => {
+    const { searchName } = data;
+
+    const query = queryConfig.order
+      ? omit(
+          {
+            ...queryConfig,
+            page: '1',
+            name: searchName
+          },
+          ['order', 'sort_by']
+        )
+      : {
+          ...queryConfig,
+          page: '1',
+          name: searchName
+        };
+
+    navigate({
+      pathname: path.home,
+      search: createSearchParams(query).toString()
+    });
+  });
 
   return (
     <div className='bg-orange'>
@@ -117,12 +159,12 @@ export default function Header() {
           </div>
 
           <div className='col-span-9 mt-5 flex items-center rounded-sm bg-white p-1'>
-            <form className='flex flex-grow'>
+            <form className='flex flex-grow' onSubmit={handleSearchName}>
               <input
                 type='text'
-                name='search'
                 className='flex-grow items-center border-none bg-transparent px-2 outline-none'
                 placeholder='Đơn FreeShip 0đ'
+                {...register('searchName')}
               />
               <button type='submit' className='color-white flex-shrink rounded-sm bg-orange px-5 py-2.5'>
                 <svg
