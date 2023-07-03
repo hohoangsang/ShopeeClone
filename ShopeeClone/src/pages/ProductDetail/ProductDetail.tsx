@@ -16,7 +16,7 @@ import { toast } from 'react-toastify';
 export default function ProductDetail() {
   const { nameId } = useParams();
   const id = getIdFromNameId(nameId as string);
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
   const { data: productDetailData } = useQuery({
     queryKey: ['product', id],
     queryFn: () => {
@@ -24,7 +24,7 @@ export default function ProductDetail() {
     }
   });
 
-  const customToast = ToastSuccess();
+  const [showToastSuccess, setShowToastSuccess] = useState(false);
 
   const [buyCount, setBuyCount] = useState(1);
 
@@ -113,8 +113,10 @@ export default function ProductDetail() {
   const handleAddToCart = (body: ProductCart) => {
     addToCartMutation.mutate(body, {
       onSuccess: () => {
-        toast.success("Thêm vào giỏ hàng thành công", {autoClose: 1000})
-        queryClient.invalidateQueries({queryKey: ['purchasesCart', -1]});
+        // toast.success('Thêm vào giỏ hàng thành công', { autoClose: 1000 });
+        // customToast.renderToastSuccess({ duration: 1000 });
+        setShowToastSuccess(true);
+        queryClient.invalidateQueries({ queryKey: ['purchasesCart', -1] });
       }
     });
   };
@@ -122,7 +124,7 @@ export default function ProductDetail() {
   if (!product) return null;
 
   return (
-    <div className='bg-gray-100 py-3 relative'>
+    <div className='relative bg-gray-100 py-3'>
       <div className='container bg-white shadow'>
         <div className='grid grid-cols-12 gap-9'>
           <div className='col-span-5'>
@@ -267,7 +269,6 @@ export default function ProductDetail() {
           </div>
         </div>
       </div>
-
       <div className='container mt-4 bg-white'>
         <div className='bg-gray-100/40 p-3 text-lg uppercase'>Chi tiết sản phẩm</div>
 
@@ -275,7 +276,6 @@ export default function ProductDetail() {
           <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(product.description as string) }} />
         </div>
       </div>
-
       <div className='container mt-4'>
         {productList && (
           <div>
@@ -288,6 +288,13 @@ export default function ProductDetail() {
           </div>
         )}
       </div>
+
+      <ToastSuccess
+        setShow={setShowToastSuccess}
+        show={showToastSuccess}
+        message='Sản phẩm đã được thêm vài Giỏ hàng'
+        duration={1500}
+      />
     </div>
   );
 }

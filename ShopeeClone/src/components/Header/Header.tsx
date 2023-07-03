@@ -1,22 +1,23 @@
-import { Link, createSearchParams, useNavigate } from 'react-router-dom';
-import Popover from '../Popover';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { authApi } from 'src/api/auth.api';
-import { useContext } from 'react';
-import { AppContext } from 'src/contexts/app.context';
-import { path } from 'src/constants/path';
-import useQueryConfig from 'src/hooks/useQueryConfig';
-import { useForm } from 'react-hook-form';
-import { Schema, schema } from 'src/utils/rules';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { omit } from 'lodash';
+import { useContext } from 'react';
+import { useForm } from 'react-hook-form';
+import { Link, createSearchParams, useNavigate } from 'react-router-dom';
+import { authApi } from 'src/api/auth.api';
 import { purchasesApi } from 'src/api/purchases.api';
-import { PurchaseListStatus } from 'src/types/purchases.type';
+import { path } from 'src/constants/path';
 import { purchasesStatus } from 'src/constants/purchases';
+import { AppContext } from 'src/contexts/app.context';
+import useQueryConfig from 'src/hooks/useQueryConfig';
+import { Schema, schema } from 'src/utils/rules';
+import Popover from '../Popover';
 
 type FormData = Pick<Schema, 'searchName'>;
 
 const searchSchema = schema.pick(['searchName']);
+
+const productCartShow = 5;
 
 export default function Header() {
   const { isAuthenticated, setIsAuthenticated, profile, setProfile } = useContext(AppContext);
@@ -34,7 +35,8 @@ export default function Header() {
 
   const purchasesData = useQuery({
     queryKey: ['purchasesCart', status],
-    queryFn: () => purchasesApi.getPurchases({ status })
+    queryFn: () => purchasesApi.getPurchases({ status }),
+    enabled: isAuthenticated
   });
 
   const { data } = purchasesData;
@@ -200,12 +202,12 @@ export default function Header() {
           <Popover
             className='col-span-1'
             renderPopover={
-              data && data.data.data.length ? (
+              data && data.data.data.length && isAuthenticated ? (
                 <div className='max-w-[400px] py-2 text-sm'>
                   <div className='mx-3 mb-2 capitalize text-gray-400'>sản phẩm mới thêm</div>
 
                   <div>
-                    {data.data.data.slice(0, 5).map((product) => (
+                    {data.data.data.slice(0, productCartShow).map((product) => (
                       <div className='grid grid-cols-6 items-start gap-4 p-2 hover:bg-slate-100' key={product._id}>
                         <div className='col-span-1 h-fit w-fit'>
                           <img src={product.product.image} alt={product.product.name} className='w-full object-cover' />
@@ -222,11 +224,13 @@ export default function Header() {
                   </div>
 
                   <div className='flex items-center justify-between p-2 '>
-                    {data.data.data.length > 5 && (
+                    {data.data.data.length > productCartShow ? (
                       <div className='text-xs capitalize'>
                         <span>{data.data.data.length - 5} </span>
                         Thêm hàng vào giỏ
                       </div>
+                    ) : (
+                      <div></div>
                     )}
 
                     <Link
@@ -238,8 +242,16 @@ export default function Header() {
                   </div>
                 </div>
               ) : (
-                <div className='max-w-[350px] py-2 text-sm'>
-                  <div>Không có sản phẩm nào</div>
+                <div className='max-w-[400px] py-14 text-sm'>
+                  <div className='m-auto h-24 w-24'>
+                    <img
+                      src='https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/9bdd8040b334d31946f49e36beaf32db.png'
+                      alt=''
+                      className='w-full'
+                    />
+                  </div>
+
+                  <div className='mt-5 w-[400px] text-center capitalize'>Chưa có sản phẩm</div>
                 </div>
               )
             }
@@ -260,11 +272,11 @@ export default function Header() {
                 />
               </svg>
 
-              {data && data.data.data.length && (
-                <span className='absolute -top-0 right-0 -translate-x-[40%] -translate-y-[40%] rounded-xl bg-white px-2 text-sm text-orange'>
+              {data && data.data.data.length && isAuthenticated ? (
+                <span className='absolute -top-[10px] right-[18px] rounded-xl bg-white px-2 text-sm text-orange'>
                   {data.data.data.length}
                 </span>
-              )}
+              ) : null}
             </div>
           </Popover>
         </div>
