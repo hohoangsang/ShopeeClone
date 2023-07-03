@@ -1,6 +1,6 @@
 import { Link, createSearchParams, useNavigate } from 'react-router-dom';
 import Popover from '../Popover';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { authApi } from 'src/api/auth.api';
 import { useContext } from 'react';
 import { AppContext } from 'src/contexts/app.context';
@@ -10,6 +10,9 @@ import { useForm } from 'react-hook-form';
 import { Schema, schema } from 'src/utils/rules';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { omit } from 'lodash';
+import { purchasesApi } from 'src/api/purchases.api';
+import { PurchaseListStatus } from 'src/types/purchases.type';
+import { purchasesStatus } from 'src/constants/purchases';
 
 type FormData = Pick<Schema, 'searchName'>;
 
@@ -19,6 +22,8 @@ export default function Header() {
   const { isAuthenticated, setIsAuthenticated, profile, setProfile } = useContext(AppContext);
   const queryConfig = useQueryConfig();
 
+  const status = purchasesStatus.inCart;
+
   const navigate = useNavigate();
   const { handleSubmit, register } = useForm<FormData>({
     values: {
@@ -26,6 +31,13 @@ export default function Header() {
     },
     resolver: yupResolver(searchSchema)
   });
+
+  const purchasesData = useQuery({
+    queryKey: ['purchasesCart', status],
+    queryFn: () => purchasesApi.getPurchases({ status })
+  });
+
+  const { data } = purchasesData;
 
   const logoutMutation = useMutation({
     mutationFn: () => authApi.logoutAccount(),
@@ -188,106 +200,48 @@ export default function Header() {
           <Popover
             className='col-span-1'
             renderPopover={
-              <div className='max-w-[400px] py-2 text-sm'>
-                <div className='mx-3 mb-2 capitalize text-gray-400'>sản phẩm mới thêm</div>
+              data && data.data.data.length ? (
+                <div className='max-w-[400px] py-2 text-sm'>
+                  <div className='mx-3 mb-2 capitalize text-gray-400'>sản phẩm mới thêm</div>
 
-                <div>
-                  <div className='grid grid-cols-6 items-start gap-4 p-2 hover:bg-slate-100'>
-                    <div className='col-span-1 h-fit w-fit'>
-                      <img
-                        src='https://down-vn.img.susercontent.com/file/ac3bb3f56c5d7e3e157e300f6753aa65_tn'
-                        alt='product'
-                        className='w-full object-cover'
-                      />
-                    </div>
-                    <div className='col-span-4 mr-5'>
-                      <div className='truncate'>Kính râm nam phân cực thời trang trang trang trang trang trang </div>
-                    </div>
-                    <div className='col-span-1 flex items-start justify-end text-orange'>
-                      <span className='mr-[2px] text-[10px] underline'>đ</span>
-                      <span>580.000</span>
-                    </div>
+                  <div>
+                    {data.data.data.slice(0, 5).map((product) => (
+                      <div className='grid grid-cols-6 items-start gap-4 p-2 hover:bg-slate-100' key={product._id}>
+                        <div className='col-span-1 h-fit w-fit'>
+                          <img src={product.product.image} alt={product.product.name} className='w-full object-cover' />
+                        </div>
+                        <div className='col-span-4 mr-5'>
+                          <div className='truncate'>{product.product.name} </div>
+                        </div>
+                        <div className='col-span-1 flex items-start justify-end text-orange'>
+                          <span className='mr-[2px] text-[10px] underline'>đ</span>
+                          <span>{product.product.price}</span>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                  <div className='grid grid-cols-6 items-start gap-4 p-2 hover:bg-slate-100'>
-                    <div className='col-span-1 h-fit w-fit'>
-                      <img
-                        src='https://down-vn.img.susercontent.com/file/ac3bb3f56c5d7e3e157e300f6753aa65_tn'
-                        alt='product'
-                        className='w-full object-cover'
-                      />
-                    </div>
-                    <div className='col-span-4 mr-5'>
-                      <div className='truncate'>Kính râm nam phân cực thời trang trang trang trang trang trang </div>
-                    </div>
-                    <div className='col-span-1 flex items-start justify-end text-orange'>
-                      <span className='mr-[2px] text-[10px] underline'>đ</span>
-                      <span>580.000</span>
-                    </div>
-                  </div>
-                  <div className='grid grid-cols-6 items-start gap-4 p-2 hover:bg-slate-100'>
-                    <div className='col-span-1 h-fit w-fit'>
-                      <img
-                        src='https://down-vn.img.susercontent.com/file/ac3bb3f56c5d7e3e157e300f6753aa65_tn'
-                        alt='product'
-                        className='w-full object-cover'
-                      />
-                    </div>
-                    <div className='col-span-4 mr-5'>
-                      <div className='truncate'>Kính râm nam phân cực thời trang trang trang trang trang trang </div>
-                    </div>
-                    <div className='col-span-1 flex items-start justify-end text-orange'>
-                      <span className='mr-[2px] text-[10px] underline'>đ</span>
-                      <span>580.000</span>
-                    </div>
-                  </div>
-                  <div className='grid grid-cols-6 items-start gap-4 p-2 hover:bg-slate-100'>
-                    <div className='col-span-1 h-fit w-fit'>
-                      <img
-                        src='https://down-vn.img.susercontent.com/file/ac3bb3f56c5d7e3e157e300f6753aa65_tn'
-                        alt='product'
-                        className='w-full object-cover'
-                      />
-                    </div>
-                    <div className='col-span-4 mr-5'>
-                      <div className='truncate'>Kính râm nam phân cực thời trang trang trang trang trang trang </div>
-                    </div>
-                    <div className='col-span-1 flex items-start justify-end text-orange'>
-                      <span className='mr-[2px] text-[10px] underline'>đ</span>
-                      <span>580.000</span>
-                    </div>
-                  </div>
-                  <div className='grid grid-cols-6 items-start gap-4 p-2 hover:bg-slate-100'>
-                    <div className='col-span-1 h-fit w-fit'>
-                      <img
-                        src='https://down-vn.img.susercontent.com/file/ac3bb3f56c5d7e3e157e300f6753aa65_tn'
-                        alt='product'
-                        className='w-full object-cover'
-                      />
-                    </div>
-                    <div className='col-span-4 mr-5'>
-                      <div className='truncate'>Kính râm nam phân cực thời trang trang trang trang trang trang </div>
-                    </div>
-                    <div className='col-span-1 flex items-start justify-end text-orange'>
-                      <span className='mr-[2px] text-[10px] underline'>đ</span>
-                      <span>580.000</span>
-                    </div>
+
+                  <div className='flex items-center justify-between p-2 '>
+                    {data.data.data.length > 5 && (
+                      <div className='text-xs capitalize'>
+                        <span>{data.data.data.length - 5} </span>
+                        Thêm hàng vào giỏ
+                      </div>
+                    )}
+
+                    <Link
+                      to='/'
+                      className='rounded-sm bg-orange px-4 py-2 capitalize text-white shadow-sm hover:bg-l_orange'
+                    >
+                      Xem giỏ hàng
+                    </Link>
                   </div>
                 </div>
-
-                <div className='flex items-center justify-between p-2 '>
-                  <div className='text-xs capitalize'>
-                    <span>10 </span>
-                    Thêm hàng vào giỏ
-                  </div>
-
-                  <Link
-                    to='/'
-                    className='rounded-sm bg-orange px-4 py-2 capitalize text-white shadow-sm hover:bg-l_orange'
-                  >
-                    Xem giỏ hàng
-                  </Link>
+              ) : (
+                <div className='max-w-[350px] py-2 text-sm'>
+                  <div>Không có sản phẩm nào</div>
                 </div>
-              </div>
+              )
             }
           >
             <div className='relative'>
@@ -306,9 +260,11 @@ export default function Header() {
                 />
               </svg>
 
-              <span className='absolute -top-0 right-0 -translate-x-[40%] -translate-y-[40%] rounded-xl bg-white px-2 text-sm text-orange'>
-                10
-              </span>
+              {data && data.data.data.length && (
+                <span className='absolute -top-0 right-0 -translate-x-[40%] -translate-y-[40%] rounded-xl bg-white px-2 text-sm text-orange'>
+                  {data.data.data.length}
+                </span>
+              )}
             </div>
           </Popover>
         </div>

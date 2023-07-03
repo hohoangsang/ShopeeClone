@@ -1,24 +1,30 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import DOMPurify from 'dompurify';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { productApi } from 'src/api/product.api';
-import InputNumber from 'src/components/Form/InputNumber';
+import { purchasesApi } from 'src/api/purchases.api';
 import ProductRating from 'src/components/ProductRating';
+import QuantityController from 'src/components/QuantityController';
 import { ProductListConfig, Product as ProductType } from 'src/types/product.type';
+import { ProductCart } from 'src/types/purchases.type';
 import { formatCurrency, formatNumberToSocialStyle, getIdFromNameId, saleRate } from 'src/utils/utils';
 import Product from '../ProductList/components/Product';
-import QuantityController from 'src/components/QuantityController';
+import ToastSuccess from 'src/components/CustomToast/ToastSuccess';
+import { toast } from 'react-toastify';
 
 export default function ProductDetail() {
   const { nameId } = useParams();
   const id = getIdFromNameId(nameId as string);
+  const queryClient = useQueryClient()
   const { data: productDetailData } = useQuery({
     queryKey: ['product', id],
     queryFn: () => {
       return productApi.getProduct(id as string);
     }
   });
+
+  const customToast = ToastSuccess();
 
   const [buyCount, setBuyCount] = useState(1);
 
@@ -43,6 +49,12 @@ export default function ProductDetail() {
   const currentImagesList = useMemo(() => {
     return (product as ProductType)?.images.slice(...currentImagesIndex);
   }, [product, currentImagesIndex]);
+
+  const addToCartMutation = useMutation({
+    mutationFn: (body: ProductCart) => {
+      return purchasesApi.addToCart(body);
+    }
+  });
 
   useEffect(() => {
     if (product && product.images.length) {
@@ -98,10 +110,19 @@ export default function ProductDetail() {
     setBuyCount(value);
   };
 
+  const handleAddToCart = (body: ProductCart) => {
+    addToCartMutation.mutate(body, {
+      onSuccess: () => {
+        toast.success("Thêm vào giỏ hàng thành công", {autoClose: 1000})
+        queryClient.invalidateQueries({queryKey: ['purchasesCart', -1]});
+      }
+    });
+  };
+
   if (!product) return null;
 
   return (
-    <div className='bg-gray-100 py-3'>
+    <div className='bg-gray-100 py-3 relative'>
       <div className='container bg-white shadow'>
         <div className='grid grid-cols-12 gap-9'>
           <div className='col-span-5'>
@@ -216,7 +237,12 @@ export default function ProductDetail() {
             </div>
 
             <div className='mt-6 flex items-center gap-4'>
-              <button className='flex-items-center flex gap-2 rounded-sm border border-orange bg-orange/10 px-5 py-3 capitalize text-orange hover:bg-orange/20'>
+              <button
+                onClick={() => {
+                  handleAddToCart({ product_id: id, buy_count: buyCount });
+                }}
+                className='flex-items-center flex gap-2 rounded-sm border border-orange bg-orange/10 px-5 py-3 capitalize text-orange hover:bg-orange/20'
+              >
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
                   fill='none'
