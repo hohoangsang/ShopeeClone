@@ -12,12 +12,14 @@ import { AppContext } from 'src/contexts/app.context';
 import useQueryConfig from 'src/hooks/useQueryConfig';
 import { Schema, schema } from 'src/utils/rules';
 import Popover from '../Popover';
+import noproduct from 'src/assets/images/no-product.png';
+import { formatCurrency } from 'src/utils/utils';
 
 type FormData = Pick<Schema, 'searchName'>;
 
 const searchSchema = schema.pick(['searchName']);
 
-const productCartShow = 5;
+const MAX_PRODUCTS_SHOW = 5;
 
 export default function Header() {
   const { isAuthenticated, setIsAuthenticated, profile, setProfile } = useContext(AppContext);
@@ -33,13 +35,13 @@ export default function Header() {
     resolver: yupResolver(searchSchema)
   });
 
-  const purchasesData = useQuery({
-    queryKey: ['purchasesCart', status],
+  const { data: purchasesData } = useQuery({
+    queryKey: ['purchasesCart', {status}],
     queryFn: () => purchasesApi.getPurchases({ status }),
     enabled: isAuthenticated
   });
 
-  const { data } = purchasesData;
+  const productInCartData = purchasesData?.data.data;
 
   const logoutMutation = useMutation({
     mutationFn: () => authApi.logoutAccount(),
@@ -202,12 +204,12 @@ export default function Header() {
           <Popover
             className='col-span-1'
             renderPopover={
-              data && data.data.data.length && isAuthenticated ? (
+              productInCartData && productInCartData.length && isAuthenticated ? (
                 <div className='max-w-[400px] py-2 text-sm'>
                   <div className='mx-3 mb-2 capitalize text-gray-400'>sản phẩm mới thêm</div>
 
                   <div>
-                    {data.data.data.slice(0, productCartShow).map((product) => (
+                    {productInCartData.slice(0, MAX_PRODUCTS_SHOW).map((product) => (
                       <div className='grid grid-cols-6 items-start gap-4 p-2 hover:bg-slate-100' key={product._id}>
                         <div className='col-span-1 h-fit w-fit'>
                           <img src={product.product.image} alt={product.product.name} className='w-full object-cover' />
@@ -217,16 +219,16 @@ export default function Header() {
                         </div>
                         <div className='col-span-1 flex items-start justify-end text-orange'>
                           <span className='mr-[2px] text-[10px] underline'>đ</span>
-                          <span>{product.product.price}</span>
+                          <span>{formatCurrency(product.product.price)}</span>
                         </div>
                       </div>
                     ))}
                   </div>
 
                   <div className='flex items-center justify-between p-2 '>
-                    {data.data.data.length > productCartShow ? (
+                    {productInCartData.length > MAX_PRODUCTS_SHOW ? (
                       <div className='text-xs capitalize'>
-                        <span>{data.data.data.length - 5} </span>
+                        <span>{productInCartData.length - MAX_PRODUCTS_SHOW} </span>
                         Thêm hàng vào giỏ
                       </div>
                     ) : (
@@ -234,7 +236,7 @@ export default function Header() {
                     )}
 
                     <Link
-                      to='/'
+                      to={`/${path.cart}`}
                       className='rounded-sm bg-orange px-4 py-2 capitalize text-white shadow-sm hover:bg-l_orange'
                     >
                       Xem giỏ hàng
@@ -244,11 +246,7 @@ export default function Header() {
               ) : (
                 <div className='max-w-[400px] py-14 text-sm'>
                   <div className='m-auto h-24 w-24'>
-                    <img
-                      src='https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/9bdd8040b334d31946f49e36beaf32db.png'
-                      alt=''
-                      className='w-full'
-                    />
+                    <img src={noproduct} alt='no-purchases' className='w-full' />
                   </div>
 
                   <div className='mt-5 w-[400px] text-center capitalize'>Chưa có sản phẩm</div>
@@ -272,9 +270,9 @@ export default function Header() {
                 />
               </svg>
 
-              {data && data.data.data.length && isAuthenticated ? (
+              {productInCartData && productInCartData.length && isAuthenticated ? (
                 <span className='absolute -top-[10px] right-[18px] rounded-xl bg-white px-2 text-sm text-orange'>
-                  {data.data.data.length}
+                  {productInCartData.length}
                 </span>
               ) : null}
             </div>

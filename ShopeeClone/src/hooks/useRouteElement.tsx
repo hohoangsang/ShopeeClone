@@ -4,6 +4,7 @@ import { path } from 'src/constants/path';
 import { AppContext } from 'src/contexts/app.context';
 import AuthLayout from 'src/layouts/AuthLayout';
 import MainLayout from 'src/layouts/MainLayout';
+import Cart from 'src/pages/Cart';
 import Login from 'src/pages/Login';
 import ProductDetail from 'src/pages/ProductDetail';
 import ProductList from 'src/pages/ProductList';
@@ -32,6 +33,14 @@ export default function useRouteElement() {
           element: (
             <MainLayout>
               <Profile />
+            </MainLayout>
+          )
+        },
+        {
+          path: path.cart,
+          element: (
+            <MainLayout>
+              <Cart/>
             </MainLayout>
           )
         }

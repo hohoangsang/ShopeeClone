@@ -12,6 +12,7 @@ import { formatCurrency, formatNumberToSocialStyle, getIdFromNameId, saleRate } 
 import Product from '../ProductList/components/Product';
 import ToastSuccess from 'src/components/CustomToast/ToastSuccess';
 import { toast } from 'react-toastify';
+import { purchasesStatus } from 'src/constants/purchases';
 
 export default function ProductDetail() {
   const { nameId } = useParams();
@@ -116,7 +117,7 @@ export default function ProductDetail() {
         // toast.success('Thêm vào giỏ hàng thành công', { autoClose: 1000 });
         // customToast.renderToastSuccess({ duration: 1000 });
         setShowToastSuccess(true);
-        queryClient.invalidateQueries({ queryKey: ['purchasesCart', -1] });
+        queryClient.invalidateQueries({ queryKey: ['purchasesCart', { status: purchasesStatus.inCart }] });
       }
     });
   };

@@ -152,6 +152,7 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
         <span className='mb-6 capitalize'>Khoảng giá</span>
         <form onSubmit={onSubmitPrice}>
           <div className='mt-4 flex items-center gap-3'>
+            \
             <Controller
               control={control}
               name='price_min'
@@ -171,7 +172,6 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
                 );
               }}
             />
-
             <Controller
               control={control}
               name='price_max'
