@@ -40,7 +40,7 @@ export default function useRouteElement() {
           path: path.cart,
           element: (
             <MainLayout>
-              <Cart/>
+              <Cart />
             </MainLayout>
           )
         }

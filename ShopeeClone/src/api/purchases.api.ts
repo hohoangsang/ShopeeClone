@@ -12,14 +12,14 @@ export const purchasesApi = {
     return api.post<ResponseSuccessType<Purchases>>(`${URL}/add-to-cart`, body);
   },
   updatePurchases: (body: ProductCart) => {
-    return api.put(`${URL}/update-purchase`, body);
+    return api.put<ResponseSuccessType<Purchases>>(`${URL}/update-purchase`, body);
   },
-  deletePurchases: (data: string[]) => {
-    return api.delete(URL, {
-      data
+  deletePurchases: (purchaseIds: string[]) => {
+    return api.delete<ResponseSuccessType<{ deleted_count: number }>>(URL, {
+      data: purchaseIds
     });
   },
-  buyPurchases: (body: ProductCart[]) => {
-    return api.post(`${URL}/buy-products`, body);
+  buyProducts: (body: ProductCart[]) => {
+    return api.post<ResponseSuccessType<Purchases[]>>(`${URL}/buy-products`, body);
   }
 };

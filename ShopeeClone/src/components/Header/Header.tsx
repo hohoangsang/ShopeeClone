@@ -36,7 +36,7 @@ export default function Header() {
   });
 
   const { data: purchasesData } = useQuery({
-    queryKey: ['purchasesCart', {status}],
+    queryKey: ['purchasesCart', { status }],
     queryFn: () => purchasesApi.getPurchases({ status }),
     enabled: isAuthenticated
   });
@@ -236,7 +236,7 @@ export default function Header() {
                     )}
 
                     <Link
-                      to={`/${path.cart}`}
+                      to={path.cart}
                       className='rounded-sm bg-orange px-4 py-2 capitalize text-white shadow-sm hover:bg-l_orange'
                     >
                       Xem giỏ hàng

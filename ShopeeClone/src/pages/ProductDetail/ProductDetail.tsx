@@ -293,7 +293,7 @@ export default function ProductDetail() {
       <ToastSuccess
         setShow={setShowToastSuccess}
         show={showToastSuccess}
-        message='Sản phẩm đã được thêm vài Giỏ hàng'
+        message='Sản phẩm đã được thêm vào Giỏ hàng'
         duration={1500}
       />
     </div>

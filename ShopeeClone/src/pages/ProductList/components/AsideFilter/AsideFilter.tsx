@@ -12,6 +12,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import InputNumber from 'src/components/Form/InputNumber';
 import { NoUndefinedField } from 'src/types/utils.type';
 import { QueryConfig } from 'src/hooks/useQueryConfig';
+import InputV2 from 'src/components/Form/InputV2';
 
 interface Props {
   queryConfig: QueryConfig;
@@ -152,8 +153,20 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
         <span className='mb-6 capitalize'>Khoảng giá</span>
         <form onSubmit={onSubmitPrice}>
           <div className='mt-4 flex items-center gap-3'>
-            \
-            <Controller
+            <InputV2
+              control={control}
+              name='price_min'
+              placeholder='₫ TỪ'
+              type='number'
+              className='flex items-center'
+              classNameInput='w-full rounded-sm border border-gray-300 shadow-sm outline-none px-2 py-1'
+              classNameError='hidden'
+              onChange={() => {
+                trigger('price_max');
+              }}
+            />
+
+            {/* <Controller
               control={control}
               name='price_min'
               render={({ field }) => {
@@ -171,7 +184,7 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
                   />
                 );
               }}
-            />
+            /> */}
             <Controller
               control={control}
               name='price_max'

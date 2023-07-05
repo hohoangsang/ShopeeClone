@@ -5,5 +5,5 @@ export const path = {
   profile: '/profile',
   home: '/',
   productDetail: ':nameId',
-  cart: 'cart'
+  cart: '/cart'
 } as const;
