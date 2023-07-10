@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { purchasesApi } from 'src/api/purchases.api';
@@ -6,7 +6,7 @@ import Button from 'src/components/Button';
 import QuantityController from 'src/components/QuantityController';
 import { path } from 'src/constants/path';
 import { purchasesStatus } from 'src/constants/purchases';
-import { Purchases } from 'src/types/purchases.type';
+import { ProductCart, Purchases } from 'src/types/purchases.type';
 import { formatCurrency, formatNumberToSocialStyle, generateNameId } from 'src/utils/utils';
 import { produce } from 'immer';
 
@@ -20,9 +20,18 @@ export default function Cart() {
 
   const status = purchasesStatus.inCart;
 
-  const { data: purchasesData } = useQuery({
+  const { data: purchasesData, refetch } = useQuery({
     queryKey: ['purchasesCart', { status }],
     queryFn: () => purchasesApi.getPurchases({ status })
+  });
+
+  const updatePurchaseMutation = useMutation({
+    mutationFn: (body: ProductCart) => {
+      return purchasesApi.updatePurchases(body);
+    },
+    onSuccess: () => {
+      refetch();
+    }
   });
 
   const productInCartData = purchasesData?.data.data;
@@ -57,6 +66,22 @@ export default function Cart() {
         purchaseFinded.checked = event.target.checked;
       })
     );
+  };
+
+  const handleQuantity = (productIndex: number, value: number, enable: boolean) => {
+    if (!enable) return;
+
+    setExtendsPurchases(
+      produce((draft) => {
+        const purchaseFinded = draft[productIndex];
+        purchaseFinded.disabled = true;
+      })
+    );
+
+    updatePurchaseMutation.mutate({
+      buy_count: value,
+      product_id: extendsPurchases[productIndex].product._id
+    });
   };
 
   return (
@@ -149,6 +174,9 @@ export default function Cart() {
                         max={purchase.product.quantity}
                         value={purchase.buy_count}
                         classNameWrapper='m-0'
+                        onDecrease={(value) => handleQuantity(index, value, value > 1)}
+                        onIncrease={(value) => handleQuantity(index, value, value <= purchase.product.quantity)}
+                        disabled={purchase.disabled}
                       />
                     </div>
                     <div className='col-span-1 flex items-center justify-center text-orange'>
@@ -195,7 +223,9 @@ export default function Cart() {
               <div className='flex items-center justify-between gap-6 sm:gap-2 xl:justify-end'>
                 <div>
                   <div className='flex items-center gap-1'>
-                    <p className='text-[12px] sm:text-[16px]'>Tổng thanh toán ({extendsPurchases.filter(purchase => purchase.checked).length}): </p>
+                    <p className='text-[12px] sm:text-[16px]'>
+                      Tổng thanh toán ({extendsPurchases.filter((purchase) => purchase.checked).length}):{' '}
+                    </p>
                     <span className='text-lg text-orange md:text-2xl'>₫{formatCurrency(3020000)}</span>
                   </div>
                   <div className='grid grid-cols-12 items-center'>
