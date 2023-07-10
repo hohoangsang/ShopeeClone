@@ -1,14 +1,23 @@
 import { useQuery } from '@tanstack/react-query';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { purchasesApi } from 'src/api/purchases.api';
 import Button from 'src/components/Button';
 import QuantityController from 'src/components/QuantityController';
 import { path } from 'src/constants/path';
 import { purchasesStatus } from 'src/constants/purchases';
+import { Purchases } from 'src/types/purchases.type';
 import { formatCurrency, formatNumberToSocialStyle, generateNameId } from 'src/utils/utils';
+import { produce } from 'immer';
+
+interface ExtendsPurchases extends Purchases {
+  checked: boolean;
+  disabled: boolean;
+}
 
 export default function Cart() {
+  const [extendsPurchases, setExtendsPurchases] = useState<ExtendsPurchases[]>([]);
+
   const status = purchasesStatus.inCart;
 
   const { data: purchasesData } = useQuery({
@@ -18,6 +27,38 @@ export default function Cart() {
 
   const productInCartData = purchasesData?.data.data;
 
+  const isCheckAllPurchase = extendsPurchases.every((purchase) => purchase.checked);
+
+  useEffect(() => {
+    setExtendsPurchases(
+      productInCartData?.map((purchase) => ({
+        ...purchase,
+        checked: false,
+        disabled: false
+      })) || []
+    );
+  }, [productInCartData]);
+
+  const toggleCheckAllPurchase = () => {
+    setExtendsPurchases(
+      produce((draft) => {
+        return draft.map((purchase) => ({
+          ...purchase,
+          checked: !isCheckAllPurchase
+        }));
+      })
+    );
+  };
+
+  const checkPurchase = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    setExtendsPurchases(
+      produce((draft) => {
+        const purchaseFinded = draft[index];
+        purchaseFinded.checked = event.target.checked;
+      })
+    );
+  };
+
   return (
     <div className='bg-neutral-100'>
       <div className='container'>
@@ -26,7 +67,12 @@ export default function Cart() {
             <div className='grid grid-cols-12 bg-white px-12 py-5 shadow'>
               <div className='col-span-6'>
                 <div className='flex items-center'>
-                  <input type='checkbox' className='h-5 w-5 rounded border accent-orange outline-none' />
+                  <input
+                    checked={isCheckAllPurchase}
+                    onChange={toggleCheckAllPurchase}
+                    type='checkbox'
+                    className='h-5 w-5 rounded border accent-orange outline-none'
+                  />
                   <div className='ml-4 capitalize'>sản phẩm</div>
                 </div>
               </div>
@@ -41,7 +87,7 @@ export default function Cart() {
               </div>
             </div>
 
-            {productInCartData?.map((purchase) => (
+            {extendsPurchases?.map((purchase, index) => (
               <div
                 className='mt-4 grid grid-cols-12 items-center bg-white px-12 py-5 shadow last:mb-4'
                 key={purchase._id}
@@ -49,7 +95,12 @@ export default function Cart() {
                 <div className='col-span-6'>
                   <div className='flex items-center'>
                     <div>
-                      <input type='checkbox' className='h-5 w-5 rounded border accent-orange outline-none' />
+                      <input
+                        checked={purchase.checked}
+                        onChange={checkPurchase(index)}
+                        type='checkbox'
+                        className='h-5 w-5 rounded border accent-orange outline-none'
+                      />
                     </div>
                     <div className='ml-4 flex-grow'>
                       <div className='flex'>
@@ -122,10 +173,19 @@ export default function Cart() {
             <div className='col-span-12 xl:col-span-6'>
               <div className='flex items-center'>
                 <div>
-                  <input type='checkbox' className='h-5 w-5 rounded border accent-orange outline-none' />
+                  <input
+                    checked={isCheckAllPurchase}
+                    onChange={toggleCheckAllPurchase}
+                    type='checkbox'
+                    className='h-5 w-5 rounded border accent-orange outline-none'
+                  />
                 </div>
                 <div className='ml-6 flex gap-8'>
-                  <Button className='border-none bg-transparent text-gray-700 outline-none' text='Chọn tất cả (99)' />
+                  <Button
+                    onClick={toggleCheckAllPurchase}
+                    className='border-none bg-transparent text-gray-700 outline-none'
+                    text={`Chọn tất cả (${extendsPurchases.length})`}
+                  />
                   <Button className='border-none bg-transparent text-gray-700 outline-none' text='Xóa' />
                 </div>
               </div>
@@ -135,7 +195,7 @@ export default function Cart() {
               <div className='flex items-center justify-between gap-6 sm:gap-2 xl:justify-end'>
                 <div>
                   <div className='flex items-center gap-1'>
-                    <p className='text-[12px] sm:text-[16px]'>Tổng thanh toán (1 Sản phẩm): </p>
+                    <p className='text-[12px] sm:text-[16px]'>Tổng thanh toán ({extendsPurchases.filter(purchase => purchase.checked).length}): </p>
                     <span className='text-lg text-orange md:text-2xl'>₫{formatCurrency(3020000)}</span>
                   </div>
                   <div className='grid grid-cols-12 items-center'>
