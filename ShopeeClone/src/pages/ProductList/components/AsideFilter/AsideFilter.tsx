@@ -210,9 +210,10 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
 
           <Button
             className='w-full rounded-sm border-none bg-orange px-3 py-2 uppercase text-white shadow-sm focus:bg-orange/80'
-            text='Áp dụng'
             type='submit'
-          />
+          >
+            Áp dụng
+          </Button>
         </form>
       </div>
 
@@ -228,9 +229,10 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
 
       <Button
         className='w-full rounded-sm border-none bg-orange px-3 py-2 text-sm uppercase text-white shadow-sm focus:bg-orange/80'
-        text='Xóa tất cả'
         onClick={handleRemoveAll}
-      />
+      >
+        Xóa tất cả
+      </Button>
     </div>
   );
 }

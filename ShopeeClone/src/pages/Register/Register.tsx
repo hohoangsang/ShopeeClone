@@ -109,10 +109,11 @@ export default function Register() {
               <Button
                 isLoading={registerAccountMutation.isLoading}
                 disabled={registerAccountMutation.isLoading}
-                text='Đăng ký'
                 type='submit'
                 className='mt-5 flex w-full items-center justify-center rounded-sm bg-orange px-2 py-4 text-white'
-              />
+              >
+                Đăng ký
+              </Button>
 
               <div className='mt-8 flex justify-center'>
                 <span className='mr-1 text-gray-400'>Bạn đã có tài khoản?</span>

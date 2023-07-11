@@ -1,12 +1,12 @@
-import { ButtonHTMLAttributes } from 'react';
+import React, { ButtonHTMLAttributes } from 'react';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   isLoading?: boolean;
-  text: string;
+  children: React.ReactNode;
 }
 
 export default function Button(props: ButtonProps) {
-  const { isLoading, disabled, className, text, ...rest } = props;
+  const { isLoading, disabled, className, children, ...rest } = props;
 
   const newClassName = disabled ? className + ' cursor-not-allowed ' : className;
 
@@ -31,7 +31,7 @@ export default function Button(props: ButtonProps) {
         </svg>
       )}
 
-      <span>{text}</span>
+      <span>{children}</span>
     </button>
   );
 }

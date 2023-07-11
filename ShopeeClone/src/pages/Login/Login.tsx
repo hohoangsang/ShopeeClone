@@ -90,10 +90,11 @@ export default function Login() {
             <Button
               isLoading={loginAccountMutation.isLoading}
               disabled={loginAccountMutation.isLoading}
-              text='Đăng nhập'
               type='submit'
               className='mt-5 flex w-full items-center justify-center rounded-sm bg-orange px-2 py-4 text-white'
-            />
+            >
+              Đăng nhập
+            </Button>
 
             <div className='mt-8 flex justify-center'>
               <span className='mr-1 text-gray-400'>Bạn chưa có tài khoản?</span>
