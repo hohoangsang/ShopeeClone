@@ -41,3 +41,7 @@ export const getIdFromNameId = (nameId: string) => {
   const arr = nameId.split('-i-');
   return arr[arr.length - 1];
 };
+
+export function randomInteger(min: number, max: number) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}

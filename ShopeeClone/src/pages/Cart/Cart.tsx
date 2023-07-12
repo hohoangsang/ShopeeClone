@@ -7,16 +7,21 @@ import QuantityController from 'src/components/QuantityController';
 import { path } from 'src/constants/path';
 import { purchasesStatus } from 'src/constants/purchases';
 import { ProductCart, Purchases } from 'src/types/purchases.type';
-import { formatCurrency, formatNumberToSocialStyle, generateNameId } from 'src/utils/utils';
+import { formatCurrency, formatNumberToSocialStyle, generateNameId, randomInteger } from 'src/utils/utils';
 import { produce } from 'immer';
 import { keyBy } from 'lodash';
 import { toast } from 'react-toastify';
 import noproduct from 'src/assets/images/no-product.png';
+import { ProductListConfig } from 'src/types/product.type';
+import { productApi } from 'src/api/product.api';
+import Product from '../ProductList/components/Product';
 
 interface ExtendsPurchases extends Purchases {
   checked: boolean;
   disabled: boolean;
 }
+
+const randomPage = randomInteger(1, 3).toString();
 
 export default function Cart() {
   const [extendsPurchases, setExtendsPurchases] = useState<ExtendsPurchases[]>([]);
@@ -25,10 +30,19 @@ export default function Cart() {
 
   const queryClient = useQueryClient();
 
+  const queryConfig: ProductListConfig = { page: randomPage, limit: '12' };
+
   const { data: purchasesData, refetch } = useQuery({
     queryKey: ['purchasesCart', { status }],
     queryFn: () => purchasesApi.getPurchases({ status })
   });
+
+  const { data: productRelateData } = useQuery({
+    queryKey: ['productRelate', queryConfig],
+    queryFn: () => productApi.getProductList(queryConfig)
+  });
+
+  const productRelateList = productRelateData?.data.data;
 
   const updatePurchaseMutation = useMutation({
     mutationFn: (body: ProductCart) => {
@@ -338,9 +352,25 @@ export default function Cart() {
             <div className='text-sm font-bold text-gray-400'>Giỏ hàng của bạn còn trống</div>
 
             <Button className='flex h-9 w-[100px] items-center justify-center rounded-sm bg-orange text-[12px] capitalize text-white sm:w-[150px] sm:text-[16px] md:w-[160px]'>
-              <Link to={path.home} className='uppercase'>mua ngay</Link>
+              <Link to={path.home} className='uppercase'>
+                mua ngay
+              </Link>
             </Button>
           </div>
+        )}
+      </div>
+
+      <div className='container mt-4'>
+        {productRelateList?.products?.length && (
+          <>
+            <div className='uppercase text-gray-500'>có thể bạn cũng thích</div>
+
+            <div className='mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6'>
+              {productRelateList.products.map((product) => (
+                <Product key={product._id} product={product} />
+              ))}
+            </div>
+          </>
         )}
       </div>
     </div>
