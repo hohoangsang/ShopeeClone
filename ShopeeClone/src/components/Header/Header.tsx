@@ -1,39 +1,24 @@
-import { yupResolver } from '@hookform/resolvers/yup';
 import { useQuery } from '@tanstack/react-query';
-import { omit } from 'lodash';
 import { useContext } from 'react';
-import { useForm } from 'react-hook-form';
-import { Link, createSearchParams, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { purchasesApi } from 'src/api/purchases.api';
 import noproduct from 'src/assets/images/no-product.png';
 import { path } from 'src/constants/path';
 import { purchasesStatus } from 'src/constants/purchases';
 import { AppContext } from 'src/contexts/app.context';
-import useQueryConfig from 'src/hooks/useQueryConfig';
-import { Schema, schema } from 'src/utils/rules';
+import useSearchProduct from 'src/hooks/useSearchProduct';
 import { formatCurrency } from 'src/utils/utils';
 import NavHeader from '../NavHeader';
 import Popover from '../Popover';
-
-type FormData = Pick<Schema, 'searchName'>;
-
-const searchSchema = schema.pick(['searchName']);
 
 const MAX_PRODUCTS_SHOW = 5;
 
 export default function Header() {
   const { isAuthenticated } = useContext(AppContext);
-  const queryConfig = useQueryConfig();
+
+  const { handleSearchName, register } = useSearchProduct();
 
   const status = purchasesStatus.inCart;
-
-  const navigate = useNavigate();
-  const { handleSubmit, register } = useForm<FormData>({
-    values: {
-      searchName: queryConfig.name || ''
-    },
-    resolver: yupResolver(searchSchema)
-  });
 
   const { data: purchasesData } = useQuery({
     queryKey: ['purchasesCart', { status }],
@@ -43,33 +28,9 @@ export default function Header() {
 
   const productInCartData = purchasesData?.data.data;
 
-  const handleSearchName = handleSubmit((data) => {
-    const { searchName } = data;
-
-    const query = queryConfig.order
-      ? omit(
-          {
-            ...queryConfig,
-            page: '1',
-            name: searchName
-          },
-          ['order', 'sort_by']
-        )
-      : {
-          ...queryConfig,
-          page: '1',
-          name: searchName
-        };
-
-    navigate({
-      pathname: path.home,
-      search: createSearchParams(query).toString()
-    });
-  });
-
   return (
     <div className='bg-orange'>
-      <div className='container'>
+      <div className='container py-4 pt-2'>
         <NavHeader />
 
         <div className='grid grid-cols-12 items-end gap-4'>
