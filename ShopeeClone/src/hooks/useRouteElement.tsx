@@ -3,6 +3,7 @@ import { Navigate, Outlet, useRoutes } from 'react-router-dom';
 import { path } from 'src/constants/path';
 import { AppContext } from 'src/contexts/app.context';
 import AuthLayout from 'src/layouts/AuthLayout';
+import CartLayout from 'src/layouts/CartLayout';
 import MainLayout from 'src/layouts/MainLayout';
 import Cart from 'src/pages/Cart';
 import Login from 'src/pages/Login';
@@ -39,9 +40,9 @@ export default function useRouteElement() {
         {
           path: path.cart,
           element: (
-            <MainLayout>
+            <CartLayout>
               <Cart />
-            </MainLayout>
+            </CartLayout>
           )
         }
       ]

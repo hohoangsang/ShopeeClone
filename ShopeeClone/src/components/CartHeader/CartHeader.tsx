@@ -1,78 +1,17 @@
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useQuery } from '@tanstack/react-query';
-import { omit } from 'lodash';
-import { useContext } from 'react';
-import { useForm } from 'react-hook-form';
-import { Link, createSearchParams, useNavigate } from 'react-router-dom';
-import { purchasesApi } from 'src/api/purchases.api';
-import noproduct from 'src/assets/images/no-product.png';
-import { path } from 'src/constants/path';
-import { purchasesStatus } from 'src/constants/purchases';
-import { AppContext } from 'src/contexts/app.context';
-import useQueryConfig from 'src/hooks/useQueryConfig';
-import { Schema, schema } from 'src/utils/rules';
-import { formatCurrency } from 'src/utils/utils';
+import React from 'react';
 import NavHeader from '../NavHeader';
-import Popover from '../Popover';
+import { Link } from 'react-router-dom';
+import { path } from 'src/constants/path';
 
-type FormData = Pick<Schema, 'searchName'>;
-
-const searchSchema = schema.pick(['searchName']);
-
-const MAX_PRODUCTS_SHOW = 5;
-
-export default function Header() {
-  const { isAuthenticated } = useContext(AppContext);
-  const queryConfig = useQueryConfig();
-
-  const status = purchasesStatus.inCart;
-
-  const navigate = useNavigate();
-  const { handleSubmit, register } = useForm<FormData>({
-    values: {
-      searchName: queryConfig.name || ''
-    },
-    resolver: yupResolver(searchSchema)
-  });
-
-  const { data: purchasesData } = useQuery({
-    queryKey: ['purchasesCart', { status }],
-    queryFn: () => purchasesApi.getPurchases({ status }),
-    enabled: isAuthenticated
-  });
-
-  const productInCartData = purchasesData?.data.data;
-
-  const handleSearchName = handleSubmit((data) => {
-    const { searchName } = data;
-
-    const query = queryConfig.order
-      ? omit(
-          {
-            ...queryConfig,
-            page: '1',
-            name: searchName
-          },
-          ['order', 'sort_by']
-        )
-      : {
-          ...queryConfig,
-          page: '1',
-          name: searchName
-        };
-
-    navigate({
-      pathname: path.home,
-      search: createSearchParams(query).toString()
-    });
-  });
-
+export default function CartHeader() {
   return (
-    <div className='bg-orange'>
-      <div className='container'>
-        <NavHeader />
+    <div>
+      <div className='container p-0'>
+        <div className='bg-orange p-2'>
+          <NavHeader />
+        </div>
 
-        <div className='grid grid-cols-12 items-end gap-4'>
+        <div className='flex items-center justify-between'>
           <div className='col-span-2'>
             <Link to={path.home}>
               <svg viewBox='0 0 192 65' className='h-12 w-full fill-white'>
@@ -84,12 +23,11 @@ export default function Header() {
           </div>
 
           <div className='col-span-9 mt-5 flex items-center rounded-sm bg-white p-1'>
-            <form className='flex flex-grow' onSubmit={handleSearchName}>
+            <form className='flex flex-grow'>
               <input
                 type='text'
                 className='flex-grow items-center border-none bg-transparent px-2 outline-none'
                 placeholder='Đơn FreeShip 0đ'
-                {...register('searchName')}
               />
               <button type='submit' className='color-white flex-shrink rounded-sm bg-orange px-5 py-2.5'>
                 <svg
@@ -109,85 +47,6 @@ export default function Header() {
               </button>
             </form>
           </div>
-
-          <Popover
-            className='col-span-1'
-            renderPopover={
-              productInCartData && productInCartData.length && isAuthenticated ? (
-                <div className='max-w-[400px] py-2 text-sm'>
-                  <div className='mx-3 mb-2 capitalize text-gray-400'>sản phẩm mới thêm</div>
-
-                  <div>
-                    {productInCartData.slice(0, MAX_PRODUCTS_SHOW).map((product) => (
-                      <div className='grid grid-cols-6 items-start gap-4 p-2 hover:bg-slate-100' key={product._id}>
-                        <div className='col-span-1 h-fit w-fit'>
-                          <img src={product.product.image} alt={product.product.name} className='w-full object-cover' />
-                        </div>
-                        <div className='col-span-4 mr-5'>
-                          <div className='truncate'>{product.product.name} </div>
-                        </div>
-                        <div className='col-span-1 flex items-start justify-end text-orange'>
-                          <span className='mr-[2px] text-[10px] underline'>đ</span>
-                          <span>{formatCurrency(product.product.price)}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className='flex items-center justify-between p-2 '>
-                    {productInCartData.length > MAX_PRODUCTS_SHOW ? (
-                      <div className='text-xs capitalize'>
-                        <span>{productInCartData.length - MAX_PRODUCTS_SHOW} </span>
-                        Thêm hàng vào giỏ
-                      </div>
-                    ) : (
-                      <div></div>
-                    )}
-
-                    <Link
-                      to={path.cart}
-                      className='rounded-sm bg-orange px-4 py-2 capitalize text-white shadow-sm hover:bg-l_orange'
-                    >
-                      Xem giỏ hàng
-                    </Link>
-                  </div>
-                </div>
-              ) : (
-                <div className='max-w-[400px] py-14 text-sm'>
-                  <div className='m-auto h-24 w-24'>
-                    <img src={noproduct} alt='no-purchases' className='w-full' />
-                  </div>
-
-                  <div className='mt-5 w-[400px] text-center capitalize'>Chưa có sản phẩm</div>
-                </div>
-              )
-            }
-          >
-            <div className='relative'>
-              <Link to={path.cart}>
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  fill='none'
-                  viewBox='0 0 24 24'
-                  strokeWidth={1.5}
-                  stroke='currentColor'
-                  className='m-auto h-7 w-7 text-white'
-                >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    d='M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z'
-                  />
-                </svg>
-              </Link>
-
-              {productInCartData && productInCartData.length && isAuthenticated ? (
-                <span className='absolute -top-[10px] right-[18px] rounded-xl bg-white px-2 text-sm text-orange'>
-                  {productInCartData.length}
-                </span>
-              ) : null}
-            </div>
-          </Popover>
         </div>
       </div>
     </div>
