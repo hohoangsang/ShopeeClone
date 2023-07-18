@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { purchasesApi } from 'src/api/purchases.api';
 import Button from 'src/components/Button';
 import QuantityController from 'src/components/QuantityController';
@@ -15,22 +15,24 @@ import noproduct from 'src/assets/images/no-product.png';
 import { ProductListConfig } from 'src/types/product.type';
 import { productApi } from 'src/api/product.api';
 import Product from '../ProductList/components/Product';
-
-interface ExtendsPurchases extends Purchases {
-  checked: boolean;
-  disabled: boolean;
-}
+import { AppContext } from 'src/contexts/app.context';
 
 const randomPage = randomInteger(1, 3).toString();
 
 export default function Cart() {
-  const [extendsPurchases, setExtendsPurchases] = useState<ExtendsPurchases[]>([]);
+  const { extendsPurchases, setExtendsPurchases } = useContext(AppContext);
 
   const status = purchasesStatus.inCart;
 
   const queryClient = useQueryClient();
 
   const queryConfig: ProductListConfig = { page: randomPage, limit: '12' };
+
+  const location = useLocation();
+
+  console.log(location);
+
+  const purchaseChosenFromProductDetail = (location.state as { purchaseId: string } | null)?.purchaseId;
 
   const { data: purchasesData, refetch } = useQuery({
     queryKey: ['purchasesCart', { status }],
@@ -71,28 +73,47 @@ export default function Cart() {
   });
 
   const productInCartData = purchasesData?.data.data;
-  const isCheckAllPurchase = extendsPurchases.every((purchase) => purchase.checked);
-  const checkedPurchases = extendsPurchases.filter((purchase) => purchase.checked);
+  const isCheckAllPurchase = useMemo(() => extendsPurchases.every((purchase) => purchase.checked), [extendsPurchases]);
+  const checkedPurchases = useMemo(() => extendsPurchases.filter((purchase) => purchase.checked), [extendsPurchases]);
   const checkedPurchasesCount = checkedPurchases.length;
-  const totalCheckedPurchasePrice = checkedPurchases.reduce((total, purchase) => {
-    return total + purchase.buy_count * purchase.product.price;
-  }, 0);
-  const totalCheckedPurchaseSavingPrice = checkedPurchases.reduce((total, purchase) => {
-    return total + (purchase.product.price_before_discount - purchase.product.price) * purchase.buy_count;
-  }, 0);
+  const totalCheckedPurchasePrice = useMemo(
+    () =>
+      checkedPurchases.reduce((total, purchase) => {
+        return total + purchase.buy_count * purchase.product.price;
+      }, 0),
+    [checkedPurchases]
+  );
+
+  const totalCheckedPurchaseSavingPrice = useMemo(
+    () =>
+      checkedPurchases.reduce((total, purchase) => {
+        return total + (purchase.product.price_before_discount - purchase.product.price) * purchase.buy_count;
+      }, 0),
+    [checkedPurchases]
+  );
 
   useEffect(() => {
     setExtendsPurchases((prev) => {
       const purchasesObject = keyBy(prev, '_id');
       return (
-        productInCartData?.map((purchase) => ({
-          ...purchase,
-          checked: Boolean(purchasesObject[purchase._id]?.checked),
-          disabled: false
-        })) || []
+        productInCartData?.map((purchase) => {
+          const isChosenPurchase = purchaseChosenFromProductDetail === purchase._id;
+
+          return {
+            ...purchase,
+            checked: isChosenPurchase || Boolean(purchasesObject[purchase._id]?.checked),
+            disabled: false
+          };
+        }) || []
       );
     });
   }, [productInCartData]);
+
+  useEffect(() => {
+    return () => {
+      history.replaceState(null, '');
+    };
+  }, []);
 
   const toggleCheckAllPurchase = () => {
     setExtendsPurchases(
@@ -115,7 +136,6 @@ export default function Cart() {
   };
 
   const handleQuantity = (productIndex: number, value: number, enable: boolean) => {
-    console.log(enable);
     if (!enable) return;
 
     setExtendsPurchases(
@@ -363,7 +383,23 @@ export default function Cart() {
       <div className='container mt-4'>
         {productRelateList?.products?.length && (
           <>
-            <div className='uppercase text-gray-500'>có thể bạn cũng thích</div>
+            <div className='flex items-center justify-between'>
+              <span className='uppercase text-gray-500'>có thể bạn cũng thích</span>
+
+              <Link to={path.home} className='flex items-center gap-1 text-sm capitalize text-orange'>
+                xem tất cả{' '}
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                  strokeWidth={1.5}
+                  stroke='currentColor'
+                  className='h-4 w-4 stroke-orange'
+                >
+                  <path strokeLinecap='round' strokeLinejoin='round' d='M8.25 4.5l7.5 7.5-7.5 7.5' />
+                </svg>
+              </Link>
+            </div>
 
             <div className='mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6'>
               {productRelateList.products.map((product) => (

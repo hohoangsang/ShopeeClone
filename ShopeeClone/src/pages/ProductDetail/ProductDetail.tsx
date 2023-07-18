@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import DOMPurify from 'dompurify';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { productApi } from 'src/api/product.api';
 import { purchasesApi } from 'src/api/purchases.api';
 import ProductRating from 'src/components/ProductRating';
@@ -13,9 +13,11 @@ import Product from '../ProductList/components/Product';
 import ToastSuccess from 'src/components/CustomToast/ToastSuccess';
 import { toast } from 'react-toastify';
 import { purchasesStatus } from 'src/constants/purchases';
+import { path } from 'src/constants/path';
 
 export default function ProductDetail() {
   const { nameId } = useParams();
+  const navigate = useNavigate();
   const id = getIdFromNameId(nameId as string);
   const queryClient = useQueryClient();
   const { data: productDetailData } = useQuery({
@@ -118,6 +120,17 @@ export default function ProductDetail() {
         // customToast.renderToastSuccess({ duration: 1000 });
         setShowToastSuccess(true);
         queryClient.invalidateQueries({ queryKey: ['purchasesCart', { status: purchasesStatus.inCart }] });
+      }
+    });
+  };
+
+  const buyNow = async (body: ProductCart) => {
+    const res = await addToCartMutation.mutateAsync(body);
+    const purchase = res.data.data;
+
+    navigate(path.cart, {
+      state: {
+        purchaseId: purchase._id
       }
     });
   };
@@ -263,7 +276,12 @@ export default function ProductDetail() {
                 Thêm vào giỏ hàng
               </button>
 
-              <button className='rounded-sm bg-orange px-5 py-3 capitalize text-white hover:bg-orange/80'>
+              <button
+                onClick={() => {
+                  buyNow({ product_id: id, buy_count: buyCount });
+                }}
+                className='rounded-sm bg-orange px-5 py-3 capitalize text-white hover:bg-orange/80'
+              >
                 Mua ngay
               </button>
             </div>

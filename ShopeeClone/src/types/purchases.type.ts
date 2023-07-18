@@ -20,3 +20,8 @@ export interface Purchases {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface ExtendsPurchases extends Purchases {
+  checked: boolean;
+  disabled: boolean;
+}
