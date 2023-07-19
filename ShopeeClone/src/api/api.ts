@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosInstance, HttpStatusCode } from 'axios';
+import { clear } from 'console';
 import { toast } from 'react-toastify';
 import { path } from 'src/constants/path';
 import { AuthResponse } from 'src/types/auth.type';
@@ -86,6 +87,11 @@ class Http {
           const data: any = error.response?.data;
           const message = data?.message || error.message;
           toast.error(message);
+        }
+
+        if (error.response?.status === HttpStatusCode.Unauthorized) {
+          clearLS();
+          // location.reload(); //Không bảo toàn được tính chất SPA
         }
 
         return Promise.reject(error);

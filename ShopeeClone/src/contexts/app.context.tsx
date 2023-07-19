@@ -10,6 +10,7 @@ interface AppContextInterface {
   setProfile: React.Dispatch<React.SetStateAction<User | null>>;
   extendsPurchases: ExtendsPurchases[];
   setExtendsPurchases: React.Dispatch<React.SetStateAction<ExtendsPurchases[]>>;
+  clearData: () => void;
 }
 
 export const AppContext = createContext<AppContextInterface>({
@@ -18,13 +19,21 @@ export const AppContext = createContext<AppContextInterface>({
   profile: getProfileFromLS(),
   setProfile: () => null,
   extendsPurchases: [],
-  setExtendsPurchases: () => null
+  setExtendsPurchases: () => null,
+  clearData: () => null
 });
 
 export default function AppProvider({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(Boolean(getAccessTokenFromLS()));
   const [profile, setProfile] = useState<User | null>(getProfileFromLS());
   const [extendsPurchases, setExtendsPurchases] = useState<ExtendsPurchases[]>([]);
+
+  const clearData = () => {
+    console.log('clear');
+    setIsAuthenticated(false);
+    setProfile(null);
+    setExtendsPurchases([]);
+  };
 
   return (
     <AppContext.Provider
@@ -34,7 +43,8 @@ export default function AppProvider({ children }: { children: React.ReactNode })
         profile,
         setProfile,
         extendsPurchases,
-        setExtendsPurchases
+        setExtendsPurchases,
+        clearData
       }}
     >
       {children}

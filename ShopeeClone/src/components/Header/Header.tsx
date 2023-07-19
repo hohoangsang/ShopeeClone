@@ -23,7 +23,8 @@ export default function Header() {
   const { data: purchasesData } = useQuery({
     queryKey: ['purchasesCart', { status }],
     queryFn: () => purchasesApi.getPurchases({ status }),
-    enabled: isAuthenticated
+    enabled: isAuthenticated,
+    retry: 0
   });
 
   const productInCartData = purchasesData?.data.data;
