@@ -11,6 +11,9 @@ import ProductDetail from 'src/pages/ProductDetail';
 import ProductList from 'src/pages/ProductList';
 import Profile from 'src/pages/Profile';
 import Register from 'src/pages/Register';
+import UserLayout from 'src/pages/User/layout/UserLayout';
+import ChangePassword from 'src/pages/User/pages/ChangePassword';
+import PurchaseHistory from 'src/pages/User/pages/PurchaseHistory';
 
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext);
@@ -30,13 +33,28 @@ export default function useRouteElement() {
       element: <ProtectedRoute />,
       children: [
         {
-          path: path.profile,
+          path: path.user,
           element: (
             <MainLayout>
-              <Profile />
+              <UserLayout />
             </MainLayout>
-          )
+          ),
+          children: [
+            {
+              path: path.profile,
+              element: <Profile />
+            },
+            {
+              path: path.password,
+              element: <ChangePassword />
+            },
+            {
+              path: path.purchaseHistory,
+              element: <PurchaseHistory />
+            }
+          ]
         },
+
         {
           path: path.cart,
           element: (
