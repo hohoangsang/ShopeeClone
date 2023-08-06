@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { userApi } from 'src/api/profile.api';
 import Button from 'src/components/Button';
+import DateSelect from 'src/components/Form/DateSelect';
 import Input from 'src/components/Form/Input';
 import InputNumber from 'src/components/Form/InputNumber';
 import { UserSchema, userSchema } from 'src/utils/rules';
@@ -19,7 +20,6 @@ export default function Profile() {
   });
 
   const profile = profileData?.data.data;
-  console.log(profile);
 
   const {
     handleSubmit,
@@ -49,6 +49,10 @@ export default function Profile() {
     }
   }, [profile, setValue]);
 
+  const onSubmit = handleSubmit((data) => {
+    console.log(data);
+  });
+
   return (
     <div className='bg-white px-6 pb-16 pt-4 text-sm shadow-sm'>
       <div>
@@ -58,7 +62,7 @@ export default function Profile() {
 
       <div className='my-4 h-[1px] w-full bg-gray-200' />
 
-      <form className='mt-6 flex flex-col-reverse flex-wrap lg:flex-row'>
+      <form className='mt-6 flex flex-col-reverse flex-wrap lg:flex-row' onSubmit={onSubmit}>
         <div className='flex-grow pt-4 sm:pt-8 md:pr-14'>
           <div className='col-span-12 md:col-span-8'>
             <div className='flex flex-col flex-wrap sm:flex-row'>
@@ -90,9 +94,7 @@ export default function Profile() {
                         classNameInput='w-full rounded-sm border border-gray-300 py-2 px-3 shadow-sm outline-none focus:border-gray-500'
                         errorMessage={errors.phone?.message}
                         {...field}
-                        onChange={() => {
-                          field.onChange;
-                        }}
+                        onChange={field.onChange}
                       />
                     );
                   }}
@@ -113,32 +115,33 @@ export default function Profile() {
             </div>
             <div className='flex flex-col flex-wrap sm:mt-2 sm:flex-row'>
               <div className='truncate capitalize text-gray-500 sm:mt-3 sm:w-[20%] sm:text-right'>Ngày sinh</div>
-              <div className='flex sm:w-[80%]  sm:pl-5'>
-                <div className='flex justify-between gap-4'>
-                  <select className='h-[40px] w-[32%] rounded-sm border px-3'>
-                    <option value=''>Ngày</option>
-                  </select>
-                  <select className='h-[40px] w-[32%] rounded-sm border px-3'>
-                    <option value=''>Tháng</option>
-                  </select>
-                  <select className='h-[40px] w-[32%] rounded-sm border px-3'>
-                    <option value=''>Năm</option>
-                  </select>
-                </div>
-              </div>
+
+              <Controller
+                control={control}
+                name='date_of_birth'
+                render={({ field }) => (
+                  <DateSelect
+                    onChange={field.onChange}
+                    value={field.value}
+                    errorMessage={errors.date_of_birth?.message}
+                  />
+                )}
+              />
             </div>
 
             <div className='flex flex-col flex-wrap sm:mt-5 sm:flex-row'>
               <div className='truncate capitalize text-gray-500 sm:mt-3 sm:w-[20%] sm:text-right' />
               <div className='flex sm:w-[80%] sm:pl-5'>
-                <Button className='rounded-sm bg-orange px-6 py-3 text-white hover:bg-orange/80'>Lưu</Button>
+                <Button className='rounded-sm bg-orange px-6 py-3 text-white hover:bg-orange/80' type='submit'>
+                  Lưu
+                </Button>
               </div>
             </div>
           </div>
         </div>
 
         <div>
-          <div className='m flex w-[180px] flex-col justify-center border-b border-b-gray-200 pb-4 md:border-b-0 md:border-l md:border-l-gray-200 lg:w-72'>
+          <div className='m-auto flex w-[180px] flex-col justify-center border-b border-b-gray-200 pb-4 lg:w-72 lg:border-b-0 lg:border-l lg:border-l-gray-200'>
             <div className='m-auto my-3 h-[100px] w-[100px] md:mb-6 md:mt-8'>
               <img
                 src='https://down-vn.img.susercontent.com/file/3d254d6c41915f8b4541a296fb3a7405_tn'
@@ -149,7 +152,10 @@ export default function Profile() {
 
             <input className='hidden' type='file' accept='.jpg,.jpeg,.png' />
 
-            <button className='mx-auto mb-3 w-[100px] rounded-sm border border-gray-200 bg-white py-2 text-center capitalize'>
+            <button
+              type='button'
+              className='mx-auto mb-3 w-[100px] rounded-sm border border-gray-200 bg-white py-2 text-center capitalize'
+            >
               Chọn ảnh
             </button>
 
