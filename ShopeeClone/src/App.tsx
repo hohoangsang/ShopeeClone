@@ -9,7 +9,6 @@ function App() {
 
   useEffect(() => {
     localStorageEventTarget.addEventListener('clearData', () => {
-      console.log('clearData');
       clearData();
     });
 

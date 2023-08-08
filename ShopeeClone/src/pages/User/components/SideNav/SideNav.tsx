@@ -1,21 +1,26 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { path } from 'src/constants/path';
+import { AppContext } from 'src/contexts/app.context';
+import userSideNavDefault from "src/assets/images/userSideNavDefault.svg"
+import { generateImageUrl } from 'src/utils/utils';
 
 export default function SideNav() {
+  const { profile } = useContext(AppContext);
+
   return (
     <div className='py-4 text-sm'>
       <div className='flex items-center text-sm'>
         <Link to={path.profile} className='h-12 w-12 flex-shrink-0'>
           <img
-            src='https://down-vn.img.susercontent.com/file/3d254d6c41915f8b4541a296fb3a7405_tn'
+            src={ generateImageUrl(profile?.avatar) || userSideNavDefault}
             alt='avatar'
             className='h-full w-full rounded-full object-cover'
           />
         </Link>
 
         <div className='ml-4 flex-grow overflow-hidden'>
-          <span className='truncate font-semibold text-gray-700'>hohoangsang93</span>
+          <span className='truncate font-semibold text-gray-700'>{profile?.email}</span>
           <Link to={path.profile} className='mt-[1px] flex items-center gap-2 capitalize text-gray-400'>
             <svg width={12} height={12} viewBox='0 0 12 12' xmlns='http://www.w3.org/2000/svg'>
               <path

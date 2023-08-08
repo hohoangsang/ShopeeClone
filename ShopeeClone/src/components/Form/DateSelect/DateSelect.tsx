@@ -1,5 +1,5 @@
 import { range } from 'lodash';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface Props {
   className?: string;
@@ -33,8 +33,19 @@ export default function DateSelect(props: Props) {
     };
 
     setDate(newDate);
-    onChange && onChange(new Date(date.year, date.month, date.date));
+    onChange && onChange(new Date(newDate.year, newDate.month, newDate.date));
   };
+
+  useEffect(() => {
+    if (value) {
+      setDate((prev) => ({
+        ...prev,
+        date: value.getDate(),
+        month: value.getMonth(),
+        year: value.getFullYear()
+      }));
+    }
+  }, [value]);
 
   return (
     <div className={className}>

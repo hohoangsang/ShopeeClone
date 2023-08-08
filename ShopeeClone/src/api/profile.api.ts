@@ -2,9 +2,9 @@ import { ResponseSuccessType } from 'src/types/utils.type';
 import api from './api';
 import { User } from 'src/types/user.type';
 
-interface BodyDataProfile extends Omit<User, '_id' | 'roles' | 'emnail' | 'createdAt' | 'updatedAt'> {
-  password: string;
-  new_password: string;
+export interface BodyDataProfile extends Omit<User, '_id' | 'roles' | 'email' | 'createdAt' | 'updatedAt'> {
+  password?: string;
+  new_password?: string;
 }
 
 export const userApi = {

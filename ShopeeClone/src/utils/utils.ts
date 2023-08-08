@@ -1,4 +1,5 @@
 import axios, { AxiosError, HttpStatusCode } from 'axios';
+import config from 'src/constants/config';
 
 export function isAxiosError<T>(error: unknown): error is AxiosError<T> {
   // eslint-disable-next-line import/no-named-as-default-member
@@ -44,4 +45,8 @@ export const getIdFromNameId = (nameId: string) => {
 
 export function randomInteger(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+export function generateImageUrl(avatarName?: string) {
+  return avatarName ? `${config.baseUrl}/images/${avatarName}` : '';
 }

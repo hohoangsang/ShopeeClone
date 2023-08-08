@@ -5,6 +5,8 @@ import { path } from 'src/constants/path';
 import { AppContext } from 'src/contexts/app.context';
 import { useMutation } from '@tanstack/react-query';
 import { authApi } from 'src/api/auth.api';
+import userHeaderDefault from 'src/assets/images/userHeaderDefault.svg';
+import { generateImageUrl } from 'src/utils/utils';
 
 export default function NavHeader() {
   const { isAuthenticated, setIsAuthenticated, profile, setProfile } = useContext(AppContext);
@@ -80,9 +82,9 @@ export default function NavHeader() {
         >
           <div className='h-6 w-6'>
             <img
-              src='https://down-vn.img.susercontent.com/file/13dc547563539af96b776efa692f5091_tn'
+              src={generateImageUrl(profile?.avatar) || userHeaderDefault}
               alt='avatar'
-              className='w-full flex-shrink rounded-full object-cover'
+              className='h-full w-full flex-shrink rounded-full object-cover'
             />
           </div>
 

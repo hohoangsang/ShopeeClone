@@ -1,23 +1,53 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useQuery } from '@tanstack/react-query';
-import React, { useEffect } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { userApi } from 'src/api/profile.api';
+import { toast } from 'react-toastify';
+import { BodyDataProfile, userApi } from 'src/api/profile.api';
 import Button from 'src/components/Button';
 import DateSelect from 'src/components/Form/DateSelect';
 import Input from 'src/components/Form/Input';
 import InputNumber from 'src/components/Form/InputNumber';
+import { AppContext } from 'src/contexts/app.context';
+import { setProfileToLS } from 'src/utils/auth';
 import { UserSchema, userSchema } from 'src/utils/rules';
+import { generateImageUrl, isAxiosErrorUnprocessableEntity } from 'src/utils/utils';
+import userSideNavDefault from 'src/assets/images/userSideNavDefault.svg';
+import { ResponseErrorType } from 'src/types/utils.type';
 
 const userFormSchema = userSchema.pick(['address', 'avatar', 'date_of_birth', 'name', 'phone']);
 
 type UserFormSchema = Pick<UserSchema, 'address' | 'avatar' | 'name' | 'phone' | 'date_of_birth'>;
 
+type UserFormErrorData = Omit<UserFormSchema, 'date_of_birth'> & {
+  date_of_birth: string;
+};
+
 export default function Profile() {
-  const { data: profileData } = useQuery({
+  const { setProfile } = useContext(AppContext);
+
+  const queryClient = useQueryClient();
+
+  const uploadImageRef = useRef<HTMLInputElement>(null);
+
+  const { data: profileData, refetch } = useQuery({
     queryKey: ['profile'],
     queryFn: userApi.getProfile
   });
+
+  const updateProfileMutation = useMutation({
+    mutationFn: (body: BodyDataProfile) => userApi.updateProfile(body)
+  });
+
+  const uploadImageMutation = useMutation({
+    mutationFn: (body: FormData) => userApi.uploadAvatar(body)
+  });
+
+  const [file, setFile] = useState<File>();
+
+  const previewImage = useMemo(() => {
+    return file ? URL.createObjectURL(file) : '';
+  }, [file]);
 
   const profile = profileData?.data.data;
 
@@ -27,7 +57,8 @@ export default function Profile() {
     register,
     watch,
     control,
-    setValue
+    setValue,
+    setError
   } = useForm<UserFormSchema>({
     defaultValues: {
       address: '',
@@ -49,9 +80,59 @@ export default function Profile() {
     }
   }, [profile, setValue]);
 
-  const onSubmit = handleSubmit((data) => {
-    console.log(data);
+  const onSubmit = handleSubmit(async (data) => {
+    try {
+      let uploadAvatar = '';
+
+      if (file) {
+        const fileUpload = new FormData();
+
+        fileUpload.append('image', file);
+
+        const res = await uploadImageMutation.mutateAsync(fileUpload);
+        uploadAvatar = res.data.data;
+      }
+
+      const res = await updateProfileMutation.mutateAsync({
+        ...data,
+        date_of_birth: data.date_of_birth?.toISOString(),
+        avatar: uploadAvatar || profile?.avatar
+      });
+
+      refetch();
+      toast.success(res.data.message, { autoClose: 500 });
+      setProfile(res.data.data);
+      setProfileToLS(res.data.data);
+    } catch (error) {
+      if (isAxiosErrorUnprocessableEntity<ResponseErrorType<UserFormErrorData>>(error)) {
+        const formError = error.response?.data.data;
+
+        if (formError) {
+          Object.keys(formError).forEach((key) => {
+            setError(key as keyof UserFormErrorData, {
+              message: formError[key as keyof UserFormErrorData],
+              type: 'Server'
+            });
+          });
+        }
+      }
+    }
   });
+
+  useEffect(() => {
+    return () => {
+      queryClient.clear();
+    };
+  }, []);
+
+  const changeImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files || [];
+    setFile(file[0]);
+  };
+
+  const handleUpload = () => {
+    uploadImageRef.current?.click();
+  };
 
   return (
     <div className='bg-white px-6 pb-16 pt-4 text-sm shadow-sm'>
@@ -144,17 +225,24 @@ export default function Profile() {
           <div className='m-auto flex w-[180px] flex-col justify-center border-b border-b-gray-200 pb-4 lg:w-72 lg:border-b-0 lg:border-l lg:border-l-gray-200'>
             <div className='m-auto my-3 h-[100px] w-[100px] md:mb-6 md:mt-8'>
               <img
-                src='https://down-vn.img.susercontent.com/file/3d254d6c41915f8b4541a296fb3a7405_tn'
+                src={previewImage || generateImageUrl(profile?.avatar) || userSideNavDefault}
                 alt='avatar'
                 className='h-full w-full rounded-full object-cover'
               />
             </div>
 
-            <input className='hidden' type='file' accept='.jpg,.jpeg,.png' />
+            <input
+              className='hidden'
+              type='file'
+              accept='.jpg,.jpeg,.png'
+              ref={uploadImageRef}
+              onChange={changeImage}
+            />
 
             <button
               type='button'
               className='mx-auto mb-3 w-[100px] rounded-sm border border-gray-200 bg-white py-2 text-center capitalize'
+              onClick={handleUpload}
             >
               Chọn ảnh
             </button>
