@@ -14,6 +14,7 @@ import { UserSchema, userSchema } from 'src/utils/rules';
 import { generateImageUrl, isAxiosErrorUnprocessableEntity } from 'src/utils/utils';
 import userSideNavDefault from 'src/assets/images/userSideNavDefault.svg';
 import { ResponseErrorType } from 'src/types/utils.type';
+import config from 'src/constants/config';
 
 const userFormSchema = userSchema.pick(['address', 'avatar', 'date_of_birth', 'name', 'phone']);
 
@@ -123,11 +124,21 @@ export default function Profile() {
     return () => {
       queryClient.clear();
     };
-  }, []);
+  }, [queryClient]);
 
   const changeImage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files || [];
-    setFile(file[0]);
+    const imageFromInput = event.target.files?.[0];
+
+    if (
+      imageFromInput &&
+      (imageFromInput.size >= config.maxSizeUploadAvatar || !imageFromInput.type.includes('image'))
+    ) {
+      toast.error('Dụng lượng file tối đa 1 MB, Định dạng:.JPEG, .PNG', {
+        autoClose: 2000
+      });
+    } else {
+      setFile(imageFromInput);
+    }
   };
 
   const handleUpload = () => {
@@ -237,6 +248,10 @@ export default function Profile() {
               accept='.jpg,.jpeg,.png'
               ref={uploadImageRef}
               onChange={changeImage}
+              onClick={(event) => {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (event.target as any).value = null;
+              }}
             />
 
             <button
