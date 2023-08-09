@@ -29,7 +29,6 @@ export default function AppProvider({ children }: { children: React.ReactNode })
   const [extendsPurchases, setExtendsPurchases] = useState<ExtendsPurchases[]>([]);
 
   const clearData = () => {
-    console.log('clear');
     setIsAuthenticated(false);
     setProfile(null);
     setExtendsPurchases([]);

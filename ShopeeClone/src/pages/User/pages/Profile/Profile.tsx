@@ -1,20 +1,20 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { Fragment, useContext, useEffect, useMemo, useState } from 'react';
+import { Controller, FormProvider, useForm, useFormContext } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { BodyDataProfile, userApi } from 'src/api/profile.api';
+import userSideNavDefault from 'src/assets/images/userSideNavDefault.svg';
 import Button from 'src/components/Button';
 import DateSelect from 'src/components/Form/DateSelect';
 import Input from 'src/components/Form/Input';
+import InputAvatar from 'src/components/Form/InputAvatar';
 import InputNumber from 'src/components/Form/InputNumber';
 import { AppContext } from 'src/contexts/app.context';
+import { ResponseErrorType } from 'src/types/utils.type';
 import { setProfileToLS } from 'src/utils/auth';
 import { UserSchema, userSchema } from 'src/utils/rules';
 import { generateImageUrl, isAxiosErrorUnprocessableEntity } from 'src/utils/utils';
-import userSideNavDefault from 'src/assets/images/userSideNavDefault.svg';
-import { ResponseErrorType } from 'src/types/utils.type';
-import config from 'src/constants/config';
 
 const userFormSchema = userSchema.pick(['address', 'avatar', 'date_of_birth', 'name', 'phone']);
 
@@ -24,12 +24,67 @@ type UserFormErrorData = Omit<UserFormSchema, 'date_of_birth'> & {
   date_of_birth: string;
 };
 
+function Info() {
+  const {
+    control,
+    formState: { errors },
+    register
+  } = useFormContext<UserFormSchema>();
+
+  return (
+    <Fragment>
+      <div className='mt-6 flex flex-col flex-wrap sm:flex-row'>
+        <div className='truncate capitalize text-gray-500 sm:mt-3 sm:w-[20%] sm:text-right'>Tên</div>
+        <div className='sm:w-[80%] sm:pl-5'>
+          <Input
+            classNameInput='w-full rounded-sm border border-gray-300 py-2 px-3 shadow-sm outline-none focus:border-gray-500'
+            name='name'
+            placeholder='Tên'
+            errorMessage={errors.name?.message}
+            register={register}
+          />
+        </div>
+      </div>
+      <div className='flex flex-col flex-wrap sm:mt-2 sm:flex-row'>
+        <div className='truncate capitalize text-gray-500 sm:mt-3 sm:w-[20%] sm:text-right'>Số điện thoại</div>
+        <div className='sm:w-[80%] sm:pl-5'>
+          <Controller
+            control={control}
+            name='phone'
+            render={({ field }) => {
+              return (
+                <InputNumber
+                  placeholder='Số điện thoại'
+                  classNameInput='w-full rounded-sm border border-gray-300 py-2 px-3 shadow-sm outline-none focus:border-gray-500'
+                  errorMessage={errors.phone?.message}
+                  {...field}
+                  onChange={field.onChange}
+                />
+              );
+            }}
+          />
+        </div>
+      </div>
+      <div className='flex flex-col flex-wrap sm:mt-2 sm:flex-row'>
+        <div className='truncate capitalize text-gray-500 sm:mt-3 sm:w-[20%] sm:text-right'>Địa chỉ</div>
+        <div className='sm:w-[80%] sm:pl-5'>
+          <Input
+            classNameInput='w-full rounded-sm border border-gray-300 py-2 px-3 shadow-sm outline-none focus:border-gray-500'
+            name='address'
+            placeholder='Địa chỉ'
+            errorMessage={errors.address?.message}
+            register={register}
+          />
+        </div>
+      </div>
+    </Fragment>
+  );
+}
+
 export default function Profile() {
   const { setProfile } = useContext(AppContext);
 
   const queryClient = useQueryClient();
-
-  const uploadImageRef = useRef<HTMLInputElement>(null);
 
   const { data: profileData, refetch } = useQuery({
     queryKey: ['profile'],
@@ -45,6 +100,7 @@ export default function Profile() {
   });
 
   const [file, setFile] = useState<File>();
+  const [disableSubmit, setDisableSubmit] = useState(false);
 
   const previewImage = useMemo(() => {
     return file ? URL.createObjectURL(file) : '';
@@ -52,15 +108,7 @@ export default function Profile() {
 
   const profile = profileData?.data.data;
 
-  const {
-    handleSubmit,
-    formState: { errors },
-    register,
-    watch,
-    control,
-    setValue,
-    setError
-  } = useForm<UserFormSchema>({
+  const methods = useForm<UserFormSchema>({
     defaultValues: {
       address: '',
       avatar: '',
@@ -70,6 +118,16 @@ export default function Profile() {
     },
     resolver: yupResolver(userFormSchema)
   });
+
+  const {
+    handleSubmit,
+    formState: { errors },
+    register,
+    watch,
+    control,
+    setValue,
+    setError
+  } = methods;
 
   useEffect(() => {
     if (profile) {
@@ -84,6 +142,8 @@ export default function Profile() {
   const onSubmit = handleSubmit(async (data) => {
     try {
       let uploadAvatar = '';
+
+      setDisableSubmit(true);
 
       if (file) {
         const fileUpload = new FormData();
@@ -104,6 +164,7 @@ export default function Profile() {
       toast.success(res.data.message, { autoClose: 500 });
       setProfile(res.data.data);
       setProfileToLS(res.data.data);
+      setDisableSubmit(false);
     } catch (error) {
       if (isAxiosErrorUnprocessableEntity<ResponseErrorType<UserFormErrorData>>(error)) {
         const formError = error.response?.data.data;
@@ -126,23 +187,8 @@ export default function Profile() {
     };
   }, [queryClient]);
 
-  const changeImage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const imageFromInput = event.target.files?.[0];
-
-    if (
-      imageFromInput &&
-      (imageFromInput.size >= config.maxSizeUploadAvatar || !imageFromInput.type.includes('image'))
-    ) {
-      toast.error('Dụng lượng file tối đa 1 MB, Định dạng:.JPEG, .PNG', {
-        autoClose: 2000
-      });
-    } else {
-      setFile(imageFromInput);
-    }
-  };
-
-  const handleUpload = () => {
-    uploadImageRef.current?.click();
+  const handleChangeFile = (file?: File) => {
+    setFile(file);
   };
 
   return (
@@ -154,119 +200,63 @@ export default function Profile() {
 
       <div className='my-4 h-[1px] w-full bg-gray-200' />
 
-      <form className='mt-6 flex flex-col-reverse flex-wrap lg:flex-row' onSubmit={onSubmit}>
-        <div className='flex-grow pt-4 sm:pt-8 md:pr-14'>
-          <div className='col-span-12 md:col-span-8'>
-            <div className='flex flex-col flex-wrap sm:flex-row'>
-              <div className='text-gray-500 sm:w-[20%] sm:text-right '>Email</div>
-              <div className='sm:w-[80%] sm:pl-5'>{profile?.email}</div>
-            </div>
-            <div className='mt-6 flex flex-col flex-wrap sm:flex-row'>
-              <div className='truncate capitalize text-gray-500 sm:mt-3 sm:w-[20%] sm:text-right'>Tên</div>
-              <div className='sm:w-[80%] sm:pl-5'>
-                <Input
-                  classNameInput='w-full rounded-sm border border-gray-300 py-2 px-3 shadow-sm outline-none focus:border-gray-500'
-                  name='name'
-                  placeholder='Tên'
-                  errorMessage={errors.name?.message}
-                  register={register}
-                />
+      <FormProvider {...methods}>
+        <form className='mt-6 flex flex-col-reverse flex-wrap lg:flex-row' onSubmit={onSubmit}>
+          <div className='flex-grow pt-4 sm:pt-8 md:pr-14'>
+            <div className='col-span-12 md:col-span-8'>
+              <div className='flex flex-col flex-wrap sm:flex-row'>
+                <div className='text-gray-500 sm:w-[20%] sm:text-right '>Email</div>
+                <div className='sm:w-[80%] sm:pl-5'>{profile?.email}</div>
               </div>
-            </div>
-            <div className='flex flex-col flex-wrap sm:mt-2 sm:flex-row'>
-              <div className='truncate capitalize text-gray-500 sm:mt-3 sm:w-[20%] sm:text-right'>Số điện thoại</div>
-              <div className='sm:w-[80%] sm:pl-5'>
+              <Info />
+              <div className='flex flex-col flex-wrap sm:mt-2 sm:flex-row'>
+                <div className='truncate capitalize text-gray-500 sm:mt-3 sm:w-[20%] sm:text-right'>Ngày sinh</div>
                 <Controller
                   control={control}
-                  name='phone'
-                  render={({ field }) => {
-                    return (
-                      <InputNumber
-                        placeholder='Số điện thoại'
-                        classNameInput='w-full rounded-sm border border-gray-300 py-2 px-3 shadow-sm outline-none focus:border-gray-500'
-                        errorMessage={errors.phone?.message}
-                        {...field}
-                        onChange={field.onChange}
-                      />
-                    );
-                  }}
+                  name='date_of_birth'
+                  render={({ field }) => (
+                    <DateSelect
+                      onChange={field.onChange}
+                      value={field.value}
+                      errorMessage={errors.date_of_birth?.message}
+                    />
+                  )}
                 />
               </div>
-            </div>
-            <div className='flex flex-col flex-wrap sm:mt-2 sm:flex-row'>
-              <div className='truncate capitalize text-gray-500 sm:mt-3 sm:w-[20%] sm:text-right'>Địa chỉ</div>
-              <div className='sm:w-[80%] sm:pl-5'>
-                <Input
-                  classNameInput='w-full rounded-sm border border-gray-300 py-2 px-3 shadow-sm outline-none focus:border-gray-500'
-                  name='address'
-                  placeholder='Địa chỉ'
-                  errorMessage={errors.address?.message}
-                  register={register}
-                />
-              </div>
-            </div>
-            <div className='flex flex-col flex-wrap sm:mt-2 sm:flex-row'>
-              <div className='truncate capitalize text-gray-500 sm:mt-3 sm:w-[20%] sm:text-right'>Ngày sinh</div>
 
-              <Controller
-                control={control}
-                name='date_of_birth'
-                render={({ field }) => (
-                  <DateSelect
-                    onChange={field.onChange}
-                    value={field.value}
-                    errorMessage={errors.date_of_birth?.message}
-                  />
-                )}
-              />
-            </div>
-
-            <div className='flex flex-col flex-wrap sm:mt-5 sm:flex-row'>
-              <div className='truncate capitalize text-gray-500 sm:mt-3 sm:w-[20%] sm:text-right' />
-              <div className='flex sm:w-[80%] sm:pl-5'>
-                <Button className='rounded-sm bg-orange px-6 py-3 text-white hover:bg-orange/80' type='submit'>
-                  Lưu
-                </Button>
+              <div className='flex flex-col flex-wrap sm:mt-5 sm:flex-row'>
+                <div className='truncate capitalize text-gray-500 sm:mt-3 sm:w-[20%] sm:text-right' />
+                <div className='flex sm:w-[80%] sm:pl-5'>
+                  <Button
+                    disabled={disableSubmit}
+                    className='rounded-sm bg-orange px-6 py-3 text-white hover:bg-orange/80'
+                    type='submit'
+                  >
+                    Lưu
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div>
-          <div className='m-auto flex w-[180px] flex-col justify-center border-b border-b-gray-200 pb-4 lg:w-72 lg:border-b-0 lg:border-l lg:border-l-gray-200'>
-            <div className='m-auto my-3 h-[100px] w-[100px] md:mb-6 md:mt-8'>
-              <img
-                src={previewImage || generateImageUrl(profile?.avatar) || userSideNavDefault}
-                alt='avatar'
-                className='h-full w-full rounded-full object-cover'
-              />
+          <div>
+            <div className='m-auto flex w-[180px] flex-col justify-center border-b border-b-gray-200 pb-4 lg:w-72 lg:border-b-0 lg:border-l lg:border-l-gray-200'>
+              <div className='m-auto my-3 h-[100px] w-[100px] md:mb-6 md:mt-8'>
+                <img
+                  src={previewImage || generateImageUrl(profile?.avatar) || userSideNavDefault}
+                  alt='avatar'
+                  className='h-full w-full rounded-full object-cover'
+                />
+              </div>
+
+              <InputAvatar onChange={handleChangeFile} />
+
+              <span className='text-center text-gray-500'>Dụng lượng file tối đa 1 MB </span>
+              <span className='text-center text-gray-500'>Định dạng:.JPEG, .PNG</span>
             </div>
-
-            <input
-              className='hidden'
-              type='file'
-              accept='.jpg,.jpeg,.png'
-              ref={uploadImageRef}
-              onChange={changeImage}
-              onClick={(event) => {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (event.target as any).value = null;
-              }}
-            />
-
-            <button
-              type='button'
-              className='mx-auto mb-3 w-[100px] rounded-sm border border-gray-200 bg-white py-2 text-center capitalize'
-              onClick={handleUpload}
-            >
-              Chọn ảnh
-            </button>
-
-            <span className='text-center text-gray-500'>Dụng lượng file tối đa 1 MB </span>
-            <span className='text-center text-gray-500'>Định dạng:.JPEG, .PNG</span>
           </div>
-        </div>
-      </form>
+        </form>
+      </FormProvider>
     </div>
   );
 }
