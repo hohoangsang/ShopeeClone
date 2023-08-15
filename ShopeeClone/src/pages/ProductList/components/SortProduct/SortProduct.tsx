@@ -1,11 +1,10 @@
-import React from 'react';
-import { order as orderConstant, sortBy } from 'src/constants/product';
-import { ProductListConfig } from 'src/types/product.type';
+import classNames from 'classnames';
+import omit from 'lodash/omit';
 import { Link, createSearchParams, useNavigate } from 'react-router-dom';
 import { path } from 'src/constants/path';
-import classNames from 'classnames';
-import { omit } from 'lodash';
+import { order as orderConstant, sortBy } from 'src/constants/product';
 import { QueryConfig } from 'src/hooks/useQueryConfig';
+import { ProductListConfig } from 'src/types/product.type';
 
 interface Props {
   pageSize: number;

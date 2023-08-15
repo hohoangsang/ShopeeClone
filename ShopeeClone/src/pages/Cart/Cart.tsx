@@ -1,21 +1,21 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { produce } from 'immer';
+import keyBy from 'lodash/keyBy';
+import React, { useContext, useEffect, useMemo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { productApi } from 'src/api/product.api';
 import { purchasesApi } from 'src/api/purchases.api';
+import noproduct from 'src/assets/images/no-product.png';
 import Button from 'src/components/Button';
 import QuantityController from 'src/components/QuantityController';
 import { path } from 'src/constants/path';
 import { purchasesStatus } from 'src/constants/purchases';
+import { AppContext } from 'src/contexts/app.context';
+import { ProductListConfig } from 'src/types/product.type';
 import { ProductCart, Purchases } from 'src/types/purchases.type';
 import { formatCurrency, formatNumberToSocialStyle, generateNameId, randomInteger } from 'src/utils/utils';
-import { produce } from 'immer';
-import { keyBy } from 'lodash';
-import { toast } from 'react-toastify';
-import noproduct from 'src/assets/images/no-product.png';
-import { ProductListConfig } from 'src/types/product.type';
-import { productApi } from 'src/api/product.api';
 import Product from '../ProductList/components/Product';
-import { AppContext } from 'src/contexts/app.context';
 
 const randomPage = randomInteger(1, 3).toString();
 
@@ -107,7 +107,7 @@ export default function Cart() {
         }) || []
       );
     });
-  }, [productInCartData]);
+  }, [productInCartData, purchaseChosenFromProductDetail, setExtendsPurchases]);
 
   useEffect(() => {
     return () => {

@@ -1,10 +1,9 @@
 import axios, { AxiosError, AxiosInstance, HttpStatusCode } from 'axios';
-import { clear } from 'console';
 import { toast } from 'react-toastify';
 import config from 'src/constants/config';
 import { path } from 'src/constants/path';
 import { AuthResponse } from 'src/types/auth.type';
-import { getAccessTokenFromLS, clearLS, setAccessTokenToLS, setProfileToLS } from 'src/utils/auth';
+import { clearLS, getAccessTokenFromLS, setAccessTokenToLS, setProfileToLS } from 'src/utils/auth';
 
 // const api = axios.create({
 //   baseURL: 'https://api-ecom.duthanhduoc.com',

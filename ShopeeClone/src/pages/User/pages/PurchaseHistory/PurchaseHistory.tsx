@@ -2,13 +2,12 @@ import { useQuery } from '@tanstack/react-query';
 import classNames from 'classnames';
 import { Link, createSearchParams } from 'react-router-dom';
 import { purchasesApi } from 'src/api/purchases.api';
+import nopurchase from 'src/assets/images/no-purchases.png';
 import { path } from 'src/constants/path';
 import { purchasesStatus } from 'src/constants/purchases';
 import { useQueryParams } from 'src/hooks/useQueryParams';
 import { PurchaseListStatus } from 'src/types/purchases.type';
-import nopurchase from 'src/assets/images/no-purchases.png';
 import { formatCurrency, generateNameId } from 'src/utils/utils';
-import { Fragment } from 'react';
 
 const tabArrayData = [
   {

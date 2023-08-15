@@ -5,7 +5,7 @@ import { Schema, schema } from 'src/utils/rules';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation } from '@tanstack/react-query';
 import { authApi } from 'src/api/auth.api';
-import { omit } from 'lodash';
+import omit from 'lodash/omit';
 import { isAxiosErrorUnprocessableEntity } from 'src/utils/utils';
 import { ResponseErrorType } from 'src/types/utils.type';
 import { useContext } from 'react';
@@ -21,8 +21,8 @@ export default function Register() {
     handleSubmit,
     register,
     setError,
-    watch, //method này dùng để lấy dữ liệu trong ô input nhưng làm cho component re-render trong suốt quá trình change input
-    getValues, //method này dùng để lấy dữ liệu trong ô input và ko làm cho component re-render
+    //watch, //method này dùng để lấy dữ liệu trong ô input nhưng làm cho component re-render trong suốt quá trình change input
+    //getValues, //method này dùng để lấy dữ liệu trong ô input và ko làm cho component re-render
     formState: { errors }
   } = useForm<FormData>({
     resolver: yupResolver(registerSchema)

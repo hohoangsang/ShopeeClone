@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function NonStarFilled(props: { className?: string }) {
   const { className = 'h-3 w-3 fill-current text-gray-300' } = props;
 

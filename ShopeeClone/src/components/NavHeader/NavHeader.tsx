@@ -1,12 +1,12 @@
-import React, { useContext } from 'react';
-import Popover from '../Popover';
-import { Link } from 'react-router-dom';
-import { path } from 'src/constants/path';
-import { AppContext } from 'src/contexts/app.context';
 import { useMutation } from '@tanstack/react-query';
+import { useContext } from 'react';
+import { Link } from 'react-router-dom';
 import { authApi } from 'src/api/auth.api';
 import userHeaderDefault from 'src/assets/images/userHeaderDefault.svg';
+import { path } from 'src/constants/path';
+import { AppContext } from 'src/contexts/app.context';
 import { generateImageUrl } from 'src/utils/utils';
+import Popover from '../Popover';
 
 export default function NavHeader() {
   const { isAuthenticated, setIsAuthenticated, profile, setProfile } = useContext(AppContext);

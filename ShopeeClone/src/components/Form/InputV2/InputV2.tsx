@@ -58,20 +58,3 @@ function InputV2<TFieldValues extends FieldValues, TName extends FieldPath<TFiel
 }
 
 export default InputV2;
-
-type Gen<TFunc> = {
-  getFirstName: TFunc;
-};
-
-const handleGetFirstName: () => 'Sang' = () => 'Sang';
-
-function Children<TFunc extends () => string, TFirstName extends ReturnType<TFunc>>(props: {
-  person: Gen<TFunc>;
-  firstName: TFirstName;
-}) {
-  return null;
-}
-
-function Parent() {
-  return <Children person={{ getFirstName: handleGetFirstName }} firstName='Sang' />;
-}

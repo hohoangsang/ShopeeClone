@@ -1,4 +1,4 @@
-import React, { Fragment, useRef, useState } from 'react';
+import React, { Fragment, useRef } from 'react';
 import { toast } from 'react-toastify';
 import config from 'src/constants/config';
 
@@ -7,7 +7,6 @@ interface Props {
 }
 
 export default function InputAvatar({ onChange }: Props) {
-  const [file, setFile] = useState<File>();
   const uploadImageRef = useRef<HTMLInputElement>(null);
 
   const changeImage = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,7 +20,6 @@ export default function InputAvatar({ onChange }: Props) {
         autoClose: 2000
       });
     } else {
-      setFile(imageFromInput);
       onChange && onChange(imageFromInput);
     }
   };

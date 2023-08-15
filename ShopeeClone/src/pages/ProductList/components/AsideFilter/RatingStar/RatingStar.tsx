@@ -1,9 +1,8 @@
-import React from 'react';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 import NonStarFilled from 'src/components/Star/NonStarFilled';
 import StarFilled from 'src/components/Star/StarFilled';
-import { createSearchParams, useNavigate } from 'react-router-dom';
 import { path } from 'src/constants/path';
-import { QueryConfig } from 'src/pages/ProductList/ProductList';
+import { QueryConfig } from 'src/hooks/useQueryConfig';
 
 interface Props {
   queryConfig: QueryConfig;

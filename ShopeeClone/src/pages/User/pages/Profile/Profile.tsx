@@ -122,8 +122,6 @@ export default function Profile() {
   const {
     handleSubmit,
     formState: { errors },
-    register,
-    watch,
     control,
     setValue,
     setError

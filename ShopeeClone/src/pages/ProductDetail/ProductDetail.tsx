@@ -4,16 +4,15 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { productApi } from 'src/api/product.api';
 import { purchasesApi } from 'src/api/purchases.api';
+import ToastSuccess from 'src/components/CustomToast/ToastSuccess';
 import ProductRating from 'src/components/ProductRating';
 import QuantityController from 'src/components/QuantityController';
+import { path } from 'src/constants/path';
+import { purchasesStatus } from 'src/constants/purchases';
 import { ProductListConfig, Product as ProductType } from 'src/types/product.type';
 import { ProductCart } from 'src/types/purchases.type';
 import { formatCurrency, formatNumberToSocialStyle, getIdFromNameId, saleRate } from 'src/utils/utils';
 import Product from '../ProductList/components/Product';
-import ToastSuccess from 'src/components/CustomToast/ToastSuccess';
-import { toast } from 'react-toastify';
-import { purchasesStatus } from 'src/constants/purchases';
-import { path } from 'src/constants/path';
 
 export default function ProductDetail() {
   const { nameId } = useParams();

@@ -1,6 +1,6 @@
-import { ProductCart, Purchases, PurchaseListStatus, PurchaseStatus } from 'src/types/purchases.type';
-import api from './api';
+import { ProductCart, PurchaseListStatus, Purchases } from 'src/types/purchases.type';
 import { ResponseSuccessType } from 'src/types/utils.type';
+import api from './api';
 
 const URL = '/purchases';
 

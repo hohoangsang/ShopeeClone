@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function StarFilled(props: { className?: string }) {
   const { className = 'w-3 h-3 fill-yellow-300 text-yellow-300' } = props;
 

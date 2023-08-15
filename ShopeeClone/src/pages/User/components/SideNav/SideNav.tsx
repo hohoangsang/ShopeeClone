@@ -1,10 +1,10 @@
-import React, { useContext } from 'react';
+import classNames from 'classnames';
+import { useContext } from 'react';
 import { Link, NavLink } from 'react-router-dom';
+import userSideNavDefault from 'src/assets/images/userSideNavDefault.svg';
 import { path } from 'src/constants/path';
 import { AppContext } from 'src/contexts/app.context';
-import userSideNavDefault from 'src/assets/images/userSideNavDefault.svg';
 import { generateImageUrl } from 'src/utils/utils';
-import classNames from 'classnames';
 
 export default function SideNav() {
   const { profile } = useContext(AppContext);
