@@ -70,7 +70,7 @@ export default function NavHeader() {
               <Link to={path.profile} className='text-left hover:text-[#00bfa5] '>
                 Tài khoản của tôi
               </Link>
-              <Link to={'/'} className='text-left hover:text-[#00bfa5] '>
+              <Link to={path.purchaseHistory} className='text-left hover:text-[#00bfa5] '>
                 Đơn mua
               </Link>
               <button onClick={handleLogout} className='text-left hover:text-[#00bfa5] '>

@@ -44,7 +44,7 @@ export default function Input(props: InputProps) {
 
   return (
     <React.Fragment>
-      <div className={className}>
+      <div className={`relative ${className}`}>
         <input className={classNameInput} {...registerInput} {...rest} type={handleType()} />
 
         <div className={classNameError}>{errorMessage}</div>

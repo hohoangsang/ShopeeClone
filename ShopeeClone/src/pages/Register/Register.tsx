@@ -92,6 +92,7 @@ export default function Register() {
                   placeholder='Password'
                   register={register}
                   autoComplete='on'
+                  classNameOpenEye='absolute right-[6px] top-[12px] h-5 w-5 cursor-pointer'
                 />
               </div>
 
@@ -103,6 +104,7 @@ export default function Register() {
                   type='password'
                   errorMessage={errors.confirm_password?.message}
                   autoComplete='on'
+                  classNameOpenEye='absolute right-[6px] top-[12px] h-5 w-5 cursor-pointer'
                 />
               </div>
 

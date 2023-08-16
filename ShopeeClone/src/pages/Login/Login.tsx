@@ -84,6 +84,7 @@ export default function Login() {
                 placeholder='Password'
                 register={register}
                 autoComplete='on'
+                classNameOpenEye='absolute right-[6px] top-[12px] h-5 w-5 cursor-pointer'
               />
             </div>
 

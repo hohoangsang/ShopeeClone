@@ -1,9 +1,9 @@
 import axios, { AxiosError, AxiosInstance, HttpStatusCode } from 'axios';
 import { toast } from 'react-toastify';
 import config from 'src/constants/config';
-import { path } from 'src/constants/path';
 import { AuthResponse } from 'src/types/auth.type';
 import { clearLS, getAccessTokenFromLS, setAccessTokenToLS, setProfileToLS } from 'src/utils/auth';
+import { URL_LOGIN, URL_LOGOUT, URL_REGISTER } from './auth.api';
 
 // const api = axios.create({
 //   baseURL: 'https://api-ecom.duthanhduoc.com',
@@ -68,14 +68,14 @@ class Http {
         // console.log(response);
         const { url } = response.config;
 
-        if (url === path.login || url === path.register) {
+        if (url === URL_LOGIN || url === URL_REGISTER) {
           const result = response.data as AuthResponse;
 
           const { access_token, user } = result.data;
           this.accessToken = access_token;
           setAccessTokenToLS(access_token);
           setProfileToLS(user);
-        } else if (url === path.logout) {
+        } else if (url === URL_LOGOUT) {
           this.accessToken = '';
           clearLS();
         }

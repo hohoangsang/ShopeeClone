@@ -80,7 +80,6 @@ export default function ChangePassword() {
             <div className='sm:w-[75%] sm:pl-4 lg:w-[80%]'>
               <Input
                 placeholder='Mật khẩu hiện tại'
-                className='relative'
                 type='password'
                 register={register}
                 classNameInput='sm:mt-0 mt-2 w-full rounded-sm border border-gray-300 py-2 px-3 shadow-sm outline-none focus:border-gray-500'
@@ -101,7 +100,6 @@ export default function ChangePassword() {
                 classNameInput='sm:mt-0 mt-2 w-full rounded-sm border border-gray-300 py-2 px-3 shadow-sm outline-none focus:border-gray-500'
                 name='new_password'
                 errorMessage={errors.new_password?.message}
-                className='relative'
               />
             </div>
           </div>
@@ -117,7 +115,6 @@ export default function ChangePassword() {
                 classNameInput='sm:mt-0 mt-2 w-full rounded-sm border border-gray-300 py-2 px-3 shadow-sm outline-none focus:border-gray-500'
                 name='confirm_password'
                 errorMessage={errors.confirm_password?.message}
-                className='relative'
               />
             </div>
           </div>
