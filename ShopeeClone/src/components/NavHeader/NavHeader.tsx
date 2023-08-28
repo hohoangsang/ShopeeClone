@@ -7,9 +7,18 @@ import { path } from 'src/constants/path';
 import { AppContext } from 'src/contexts/app.context';
 import { generateImageUrl } from 'src/utils/utils';
 import Popover from '../Popover';
+import { useTranslation } from 'react-i18next';
+import { locales } from 'src/i18n/i18n';
+import classNames from 'classnames';
+
+type KeyLang = keyof typeof locales;
 
 export default function NavHeader() {
   const { isAuthenticated, setIsAuthenticated, profile, setProfile } = useContext(AppContext);
+
+  const { i18n } = useTranslation();
+
+  const language = locales[i18n.language as KeyLang];
 
   const logoutMutation = useMutation({
     mutationFn: () => authApi.logoutAccount(),
@@ -23,13 +32,31 @@ export default function NavHeader() {
     logoutMutation.mutate();
   };
 
+  const changeLanguage = (lng: KeyLang) => {
+    i18n.changeLanguage(lng);
+  };
+
   return (
     <div className='flex justify-end'>
       <Popover
         renderPopover={
           <div className='flex flex-col gap-4 py-2 pl-3 pr-28'>
-            <button className='text-left text-black hover:text-orange'>Tiếng Việt</button>
-            <button className='text-left text-black hover:text-orange'>English</button>
+            <button
+              onClick={() => changeLanguage('vi')}
+              className={classNames('text-left text-black hover:text-orange', {
+                'text-orange': i18n.language === 'vi'
+              })}
+            >
+              Tiếng Việt
+            </button>
+            <button
+              onClick={() => changeLanguage('en')}
+              className={classNames('text-left text-black hover:text-orange', {
+                'text-orange': i18n.language === 'en'
+              })}
+            >
+              English
+            </button>
           </div>
         }
         className='flex cursor-pointer items-center text-sm text-white hover:text-gray-300'
@@ -49,7 +76,7 @@ export default function NavHeader() {
           />
         </svg>
 
-        <span className='mx-1'>Tiếng Việt</span>
+        <span className='mx-1 capitalize'>{language}</span>
 
         <svg
           xmlns='http://www.w3.org/2000/svg'

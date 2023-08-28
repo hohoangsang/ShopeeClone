@@ -3,12 +3,15 @@ import NonStarFilled from 'src/components/Star/NonStarFilled';
 import StarFilled from 'src/components/Star/StarFilled';
 import { path } from 'src/constants/path';
 import { QueryConfig } from 'src/hooks/useQueryConfig';
+import {useTranslation} from "react-i18next"
 
 interface Props {
   queryConfig: QueryConfig;
 }
 
 export default function RatingStar({ queryConfig }: Props) {
+  const { t } = useTranslation("home")
+
   const navigate = useNavigate();
 
   const handleRatingFilter = (ratingFilter: number) => {
@@ -44,7 +47,7 @@ export default function RatingStar({ queryConfig }: Props) {
                   return <NonStarFilled key={indexStar} />;
                 })}
 
-              {index !== 0 && <span>trở lên</span>}
+              {index !== 0 && <span>{t('& up')}</span>}
             </div>
           </li>
         ))}

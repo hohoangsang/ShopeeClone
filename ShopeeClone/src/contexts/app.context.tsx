@@ -1,6 +1,6 @@
 import React, { createContext, useState } from 'react';
-import { ExtendsPurchases } from 'src/types/purchases.type';
-import { User } from 'src/types/user.type';
+import { ExtendsPurchases } from 'src/@types/purchases.type';
+import { User } from 'src/@types/user.type';
 import { getAccessTokenFromLS, getProfileFromLS } from 'src/utils/auth';
 
 interface AppContextInterface {

@@ -3,7 +3,7 @@ import { categoryApi } from 'src/api/category.api';
 import { productApi } from 'src/api/product.api';
 import Pagination from 'src/components/Pagination';
 import useQueryConfig from 'src/hooks/useQueryConfig';
-import { ProductListConfig } from 'src/types/product.type';
+import { ProductListConfig } from 'src/@types/product.type';
 import AsideFilter from './components/AsideFilter';
 import Product from './components/Product';
 import SortProduct from './components/SortProduct';

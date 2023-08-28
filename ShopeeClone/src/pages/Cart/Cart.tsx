@@ -12,8 +12,8 @@ import QuantityController from 'src/components/QuantityController';
 import { path } from 'src/constants/path';
 import { purchasesStatus } from 'src/constants/purchases';
 import { AppContext } from 'src/contexts/app.context';
-import { ProductListConfig } from 'src/types/product.type';
-import { ProductCart, Purchases } from 'src/types/purchases.type';
+import { ProductListConfig } from 'src/@types/product.type';
+import { ProductCart, Purchases } from 'src/@types/purchases.type';
 import { formatCurrency, formatNumberToSocialStyle, generateNameId, randomInteger } from 'src/utils/utils';
 import Product from '../ProductList/components/Product';
 
@@ -29,8 +29,6 @@ export default function Cart() {
   const queryConfig: ProductListConfig = { page: randomPage, limit: '12' };
 
   const location = useLocation();
-
-  console.log(location);
 
   const purchaseChosenFromProductDetail = (location.state as { purchaseId: string } | null)?.purchaseId;
 

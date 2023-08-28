@@ -4,15 +4,16 @@ import { Controller, useForm } from 'react-hook-form';
 import { Link, createSearchParams, useNavigate } from 'react-router-dom';
 import Button from 'src/components/Button';
 import { path } from 'src/constants/path';
-import { Category } from 'src/types/category.type';
+import { Category } from 'src/@types/category.type';
 import { Schema, schema } from 'src/utils/rules';
 import RatingStar from './RatingStar';
 
 import { yupResolver } from '@hookform/resolvers/yup';
 import InputNumber from 'src/components/Form/InputNumber';
-import { NoUndefinedField } from 'src/types/utils.type';
+import { NoUndefinedField } from 'src/@types/utils.type';
 import { QueryConfig } from 'src/hooks/useQueryConfig';
 import InputV2 from 'src/components/Form/InputV2';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   queryConfig: QueryConfig;
@@ -25,6 +26,7 @@ const priceSchema = schema.pick(['price_min', 'price_max']);
 
 export default function AsideFilter({ categories, queryConfig }: Props) {
   const { category } = queryConfig;
+  const { t } = useTranslation(['home', 'common']);
 
   const navigate = useNavigate();
 
@@ -85,7 +87,7 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
           </g>
         </svg>
 
-        <span className='flex-grow capitalize'>Tất cả danh mục</span>
+        <span className='flex-grow capitalize'>{t('category.all categories')}</span>
       </Link>
 
       <div className='my-4 h-[1px] bg-gray-200' />
@@ -143,20 +145,20 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
             </g>
           </svg>
 
-          <span className='uppercase'>Bộ lọc tìm kiếm</span>
+          <span className='uppercase'>{t('search filter')}</span>
         </div>
       </div>
 
       <div className='my-4 h-[1px] bg-gray-200' />
 
       <div className='text-sm'>
-        <span className='mb-6 capitalize'>Khoảng giá</span>
+        <span className='mb-6 capitalize'>{t('price range')}</span>
         <form onSubmit={onSubmitPrice}>
           <div className='mt-4 flex items-center gap-3'>
             <InputV2
               control={control}
               name='price_min'
-              placeholder='₫ TỪ'
+              placeholder={`₫ ${t('min')}`}
               type='number'
               className='flex items-center'
               classNameInput='w-full rounded-sm border border-gray-300 shadow-sm outline-none px-2 py-1'
@@ -191,7 +193,7 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
               render={({ field }) => {
                 return (
                   <InputNumber
-                    placeholder='₫ ĐẾn'
+                    placeholder={`₫ ${t('max')}`}
                     className='flex items-center'
                     classNameInput='w-full rounded-sm border border-gray-300 shadow-sm outline-none px-2 py-1'
                     classNameError='hidden'
@@ -212,7 +214,7 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
             className='w-full rounded-sm border-none bg-orange px-3 py-2 uppercase text-white shadow-sm focus:bg-orange/80'
             type='submit'
           >
-            Áp dụng
+            {t('apply', { ns: 'common' })}
           </Button>
         </form>
       </div>
@@ -220,7 +222,7 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
       <div className='my-4 h-[1px] bg-gray-200' />
 
       <div className='text-sm'>
-        <span className='capitalize'>Đánh giá</span>
+        <span className='capitalize'>{t('rating')}</span>
 
         <RatingStar queryConfig={queryConfig} />
       </div>
@@ -231,7 +233,7 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
         className='w-full rounded-sm border-none bg-orange px-3 py-2 text-sm uppercase text-white shadow-sm focus:bg-orange/80'
         onClick={handleRemoveAll}
       >
-        Xóa tất cả
+        {t('delete all', { ns: 'common' })}
       </Button>
     </div>
   );

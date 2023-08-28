@@ -6,7 +6,7 @@ import nopurchase from 'src/assets/images/no-purchases.png';
 import { path } from 'src/constants/path';
 import { purchasesStatus } from 'src/constants/purchases';
 import { useQueryParams } from 'src/hooks/useQueryParams';
-import { PurchaseListStatus } from 'src/types/purchases.type';
+import { PurchaseListStatus } from 'src/@types/purchases.type';
 import { formatCurrency, generateNameId } from 'src/utils/utils';
 
 const tabArrayData = [

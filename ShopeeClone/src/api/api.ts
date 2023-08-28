@@ -1,8 +1,8 @@
 import axios, { AxiosError, AxiosInstance, HttpStatusCode } from 'axios';
 import { toast } from 'react-toastify';
 import config from 'src/constants/config';
-import { AuthResponse } from 'src/types/auth.type';
-import { clearLS, getAccessTokenFromLS, setAccessTokenToLS, setProfileToLS } from 'src/utils/auth';
+import { AuthResponse } from 'src/@types/auth.type';
+import { clearLS, getAccessTokenFromLS, getRefreshTokenFromLS, setAccessTokenToLS, setProfileToLS } from 'src/utils/auth';
 import { URL_LOGIN, URL_LOGOUT, URL_REGISTER } from './auth.api';
 
 // const api = axios.create({
@@ -36,8 +36,10 @@ import { URL_LOGIN, URL_LOGOUT, URL_REGISTER } from './auth.api';
 class Http {
   instance: AxiosInstance;
   private accessToken: string;
+  private refreshToken: string;
   constructor() {
     this.accessToken = getAccessTokenFromLS(); //Khởi tạo 1 lần duy nhất và lưu access_token vào trong ram
+    this.refreshToken = getRefreshTokenFromLS(); //Khởi tạo 1 lần duy nhất và lưu access_token vào trong ram
     this.instance = axios.create({
       baseURL: config.baseUrl,
       timeout: 10000,

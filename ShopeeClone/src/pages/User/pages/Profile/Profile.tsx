@@ -11,7 +11,7 @@ import Input from 'src/components/Form/Input';
 import InputAvatar from 'src/components/Form/InputAvatar';
 import InputNumber from 'src/components/Form/InputNumber';
 import { AppContext } from 'src/contexts/app.context';
-import { ResponseErrorType } from 'src/types/utils.type';
+import { ResponseErrorType } from 'src/@types/utils.type';
 import { setProfileToLS } from 'src/utils/auth';
 import { UserSchema, userSchema } from 'src/utils/rules';
 import { generateImageUrl, isAxiosErrorUnprocessableEntity } from 'src/utils/utils';

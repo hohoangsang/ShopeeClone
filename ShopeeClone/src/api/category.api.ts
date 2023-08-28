@@ -1,6 +1,6 @@
-import { ResponseSuccessType } from 'src/types/utils.type';
+import { ResponseSuccessType } from 'src/@types/utils.type';
 import api from './api';
-import { Category } from 'src/types/category.type';
+import { Category } from 'src/@types/category.type';
 
 const URL = '/categories';
 

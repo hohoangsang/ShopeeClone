@@ -9,12 +9,14 @@ import ProductRating from 'src/components/ProductRating';
 import QuantityController from 'src/components/QuantityController';
 import { path } from 'src/constants/path';
 import { purchasesStatus } from 'src/constants/purchases';
-import { ProductListConfig, Product as ProductType } from 'src/types/product.type';
-import { ProductCart } from 'src/types/purchases.type';
+import { ProductListConfig, Product as ProductType } from 'src/@types/product.type';
+import { ProductCart } from 'src/@types/purchases.type';
 import { formatCurrency, formatNumberToSocialStyle, getIdFromNameId, saleRate } from 'src/utils/utils';
 import Product from '../ProductList/components/Product';
+import { useTranslation } from 'react-i18next';
 
 export default function ProductDetail() {
+  const { t } = useTranslation('product');
   const { nameId } = useParams();
   const navigate = useNavigate();
   const id = getIdFromNameId(nameId as string);
@@ -222,7 +224,7 @@ export default function ProductDetail() {
 
               <div>
                 <span>{formatNumberToSocialStyle(product.sold)}</span>
-                <span className='ml-1 text-sm capitalize text-gray-500'>Đã bán</span>
+                <span className='ml-1 text-sm capitalize text-gray-500'>{t('sold')}</span>
               </div>
             </div>
 
@@ -233,12 +235,12 @@ export default function ProductDetail() {
 
               <div className='ml-5 rounded-sm bg-orange px-1 text-sm font-semibold uppercase text-white'>
                 <span>{saleRate(product.price_before_discount, product.price)} </span>
-                giảm
+                {t('off')}
               </div>
             </div>
 
             <div className='mt-6 flex items-center'>
-              <span className='capitalize text-gray-500'>số lượng</span>
+              <span className='capitalize text-gray-500'>{t('quantity')}</span>
 
               <QuantityController
                 onDecrease={handleChangeQuantity}
@@ -248,7 +250,9 @@ export default function ProductDetail() {
                 max={product.quantity}
               />
 
-              <span className='ml-5 text-gray-500'>{product.quantity} sản phẩm có sẵn</span>
+              <span className='ml-5 text-gray-500'>
+                {product.quantity} {t('pieces available')}
+              </span>
             </div>
 
             <div className='mt-6 flex items-center gap-4'>
@@ -272,7 +276,7 @@ export default function ProductDetail() {
                     d='M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z'
                   />
                 </svg>
-                Thêm vào giỏ hàng
+                {t('add to cart')}
               </button>
 
               <button
@@ -281,14 +285,14 @@ export default function ProductDetail() {
                 }}
                 className='rounded-sm bg-orange px-5 py-3 capitalize text-white hover:bg-orange/80'
               >
-                Mua ngay
+                {t('buy now')}
               </button>
             </div>
           </div>
         </div>
       </div>
       <div className='container mt-4 bg-white'>
-        <div className='bg-gray-100/40 p-3 text-lg uppercase'>Chi tiết sản phẩm</div>
+        <div className='bg-gray-100/40 p-3 text-lg uppercase'>{t('product description')}</div>
 
         <div className='p-3 text-sm leading-loose'>
           <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(product.description as string) }} />
@@ -297,7 +301,7 @@ export default function ProductDetail() {
       <div className='container mt-4'>
         {productList && (
           <div>
-            <div className='uppercase text-gray-500'>có thể bạn cũng thích</div>
+            <div className='uppercase text-gray-500'>{t('you may also like')}</div>
             <div className='mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6'>
               {productList.data.data.products.map((product) => (
                 <Product key={product._id} product={product} />

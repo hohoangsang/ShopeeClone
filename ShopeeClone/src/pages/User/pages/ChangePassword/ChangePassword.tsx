@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import { BodyDataProfile, userApi } from 'src/api/profile.api';
 import Button from 'src/components/Button';
 import Input from 'src/components/Form/Input';
-import { ResponseErrorType } from 'src/types/utils.type';
+import { ResponseErrorType } from 'src/@types/utils.type';
 import { UserSchema, userSchema } from 'src/utils/rules';
 import { isAxiosErrorUnprocessableEntity } from 'src/utils/utils';
 

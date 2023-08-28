@@ -1,6 +1,6 @@
-import { ResponseSuccessType } from 'src/types/utils.type';
+import { ResponseSuccessType } from 'src/@types/utils.type';
 import api from './api';
-import { User } from 'src/types/user.type';
+import { User } from 'src/@types/user.type';
 
 export interface BodyDataProfile extends Omit<User, '_id' | 'roles' | 'email' | 'createdAt' | 'updatedAt'> {
   password?: string;

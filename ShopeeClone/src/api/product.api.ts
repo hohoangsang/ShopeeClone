@@ -1,6 +1,6 @@
-import { Product, ProductList, ProductListConfig } from 'src/types/product.type';
+import { Product, ProductList, ProductListConfig } from 'src/@types/product.type';
 import api from './api';
-import { ResponseSuccessType } from 'src/types/utils.type';
+import { ResponseSuccessType } from 'src/@types/utils.type';
 
 const URL = '/products';
 

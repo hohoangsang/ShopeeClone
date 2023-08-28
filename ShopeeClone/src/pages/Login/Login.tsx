@@ -6,7 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation } from '@tanstack/react-query';
 import { authApi } from 'src/api/auth.api';
 import { isAxiosErrorUnprocessableEntity } from 'src/utils/utils';
-import { ResponseErrorType } from 'src/types/utils.type';
+import { ResponseErrorType } from 'src/@types/utils.type';
 import { useContext } from 'react';
 import { AppContext } from 'src/contexts/app.context';
 import Button from 'src/components/Button';
