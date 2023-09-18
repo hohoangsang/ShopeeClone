@@ -15,6 +15,7 @@ import { ResponseErrorType } from 'src/@types/utils.type';
 import { setProfileToLS } from 'src/utils/auth';
 import { UserSchema, userSchema } from 'src/utils/rules';
 import { generateImageUrl, isAxiosErrorUnprocessableEntity } from 'src/utils/utils';
+import { Helmet } from 'react-helmet-async';
 
 const userFormSchema = userSchema.pick(['address', 'avatar', 'date_of_birth', 'name', 'phone']);
 
@@ -33,6 +34,10 @@ function Info() {
 
   return (
     <Fragment>
+      <Helmet>
+        <title>Tài khoản của tôi</title>
+        <meta name='description' content='Xem thông tin tài khoản của tôi' />
+      </Helmet>
       <div className='mt-6 flex flex-col flex-wrap sm:flex-row'>
         <div className='truncate capitalize text-gray-500 sm:mt-3 sm:w-[20%] sm:text-right'>Tên</div>
         <div className='sm:w-[80%] sm:pl-5'>

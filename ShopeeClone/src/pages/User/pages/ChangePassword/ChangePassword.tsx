@@ -10,6 +10,7 @@ import Input from 'src/components/Form/Input';
 import { ResponseErrorType } from 'src/@types/utils.type';
 import { UserSchema, userSchema } from 'src/utils/rules';
 import { isAxiosErrorUnprocessableEntity } from 'src/utils/utils';
+import { Helmet } from 'react-helmet-async';
 
 const passwordSchema = userSchema.pick(['password', 'new_password', 'confirm_password']);
 type PassWordData = Pick<UserSchema, 'password' | 'confirm_password' | 'new_password'>;
@@ -64,6 +65,10 @@ export default function ChangePassword() {
 
   return (
     <div className='bg-white px-6 pb-16 pt-4 text-sm shadow-sm'>
+      <Helmet>
+        <title>Đổi mật khẩu</title>
+        <meta name='description' content='Đổi mật khẩu tài khoản shopee' />
+      </Helmet>
       <div>
         <h1 className='text-lg uppercase'>Đổi mật khẩu</h1>
         <h1 className='text-gray-600'>Quản lý thông tin hồ sơ để bảo mật tài khoản</h1>

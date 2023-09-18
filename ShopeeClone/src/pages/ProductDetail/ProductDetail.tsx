@@ -148,8 +148,7 @@ export default function ProductDetail() {
           name='description'
           content={convert(product.description || '', {
             limits: {
-              ellipsis: '...',
-              maxChildNodes: 2
+              maxInputLength: 200
             }
           })}
         />

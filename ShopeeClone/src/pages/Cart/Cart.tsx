@@ -16,6 +16,7 @@ import { ProductListConfig } from 'src/@types/product.type';
 import { ProductCart, Purchases } from 'src/@types/purchases.type';
 import { formatCurrency, formatNumberToSocialStyle, generateNameId, randomInteger } from 'src/utils/utils';
 import Product from '../ProductList/components/Product';
+import { Helmet } from 'react-helmet-async';
 
 const randomPage = randomInteger(1, 3).toString();
 
@@ -179,6 +180,10 @@ export default function Cart() {
 
   return (
     <div className='bg-neutral-100'>
+      <Helmet>
+        <title>Giỏ hàng</title>
+        <meta name='description' content='Giỏ hàng của bạn' />
+      </Helmet>
       <div className='container'>
         {extendsPurchases.length ? (
           <>

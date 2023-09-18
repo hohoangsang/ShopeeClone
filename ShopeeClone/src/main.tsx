@@ -22,8 +22,8 @@ const queryClient = new QueryClient({
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <HelmetProvider>
-      <BrowserRouter>
+    <BrowserRouter>
+      <HelmetProvider>
         <QueryClientProvider client={queryClient}>
           <ErrorBoundary>
             <AppProvider>
@@ -33,7 +33,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
           <ToastContainer autoClose={1500} closeOnClick />
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
-      </BrowserRouter>
-    </HelmetProvider>
+      </HelmetProvider>
+    </BrowserRouter>
   </React.StrictMode>
 );

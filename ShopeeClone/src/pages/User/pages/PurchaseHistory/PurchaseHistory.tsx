@@ -8,6 +8,7 @@ import { purchasesStatus } from 'src/constants/purchases';
 import { useQueryParams } from 'src/hooks/useQueryParams';
 import { PurchaseListStatus } from 'src/@types/purchases.type';
 import { formatCurrency, generateNameId } from 'src/utils/utils';
+import { Helmet } from 'react-helmet-async';
 
 const tabArrayData = [
   {
@@ -51,6 +52,10 @@ export default function PurchaseHistory() {
 
   return (
     <div className='relative'>
+      <Helmet>
+        <title>Đơn mua</title>
+        <meta name='description' content='Thông tin đơn mua của tôi trên shopee' />
+      </Helmet>
       <div className='overflow-auto'>
         <div className='min-w-[700px]'>
           <div className='sticky left-0 top-0 flex items-center justify-center'>
