@@ -14,6 +14,8 @@ import { ProductCart } from 'src/@types/purchases.type';
 import { formatCurrency, formatNumberToSocialStyle, getIdFromNameId, saleRate } from 'src/utils/utils';
 import Product from '../ProductList/components/Product';
 import { useTranslation } from 'react-i18next';
+import { Helmet } from 'react-helmet-async';
+import { convert } from 'html-to-text';
 
 export default function ProductDetail() {
   const { t } = useTranslation('product');
@@ -140,6 +142,19 @@ export default function ProductDetail() {
 
   return (
     <div className='relative bg-gray-100 py-3'>
+      <Helmet>
+        <title>{product.name}</title>
+        <meta
+          name='description'
+          content={convert(product.description || '', {
+            limits: {
+              ellipsis: '...',
+              maxChildNodes: 2
+            }
+          })}
+        />
+      </Helmet>
+
       <div className='container bg-white shadow'>
         <div className='grid grid-cols-12 gap-9'>
           <div className='col-span-5'>
