@@ -7,6 +7,7 @@ import { ProductListConfig } from 'src/@types/product.type';
 import AsideFilter from './components/AsideFilter';
 import Product from './components/Product';
 import SortProduct from './components/SortProduct';
+import { Helmet } from 'react-helmet-async';
 
 export default function ProductList() {
   const queryConfig = useQueryConfig();
@@ -28,6 +29,11 @@ export default function ProductList() {
 
   return (
     <div className='bg-gray-100 py-3'>
+      <Helmet>
+        <title>Shopee Clone | Ho Hoang Sang</title>
+        <meta name='descroption' content='Đây là dự án cá nhân và thực hiện không vì mục đích thương mại'/>
+      </Helmet>
+
       <div className='container'>
         {productsData && (
           <div className='grid grid-cols-12 gap-6'>
@@ -46,7 +52,7 @@ export default function ProductList() {
             </div>
           </div>
         )}
-      </div>
+      H</div>
     </div>
   );
 }
