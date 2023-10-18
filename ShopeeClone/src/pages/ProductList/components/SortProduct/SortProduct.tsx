@@ -13,7 +13,7 @@ interface Props {
 }
 
 export default function SortProduct({ pageSize, queryConfig }: Props) {
-  const {t} = useTranslation('home');
+  const { t } = useTranslation('home');
   const page = Number(queryConfig.page);
   const navigate = useNavigate();
 
@@ -52,11 +52,11 @@ export default function SortProduct({ pageSize, queryConfig }: Props) {
   };
 
   return (
-    <div className='flex flex-wrap items-center justify-between bg-gray-200 px-6 py-3 text-sm'>
-      <div className='flex items-center gap-3'>
-        <span className='text-black/70'>{t('sort by')}</span>
+    <div className='flex flex-wrap items-center justify-between gap-4 bg-gray-200 px-6 py-3 text-sm'>
+      <div className='grid grid-cols-6 items-center gap-3'>
+        <span className='col-span-1 text-black/70'>{t('sort by')}</span>
         <button
-          className={classNames('rounded-sm px-3 py-2 capitalize shadow-sm outline-none', {
+          className={classNames('col-span-1 rounded-sm px-3 py-2 capitalize shadow-sm outline-none', {
             'bg-orange text-white hover:bg-orange/70': isActiveSort(sortBy.view),
             'bg-white hover:bg-slate-100': !isActiveSort(sortBy.view)
           })}
@@ -65,7 +65,7 @@ export default function SortProduct({ pageSize, queryConfig }: Props) {
           {t('popular')}
         </button>
         <button
-          className={classNames('rounded-sm px-3 py-2 capitalize shadow-sm outline-none', {
+          className={classNames('col-span-1 rounded-sm px-3 py-2 capitalize shadow-sm outline-none', {
             'bg-orange text-white hover:bg-orange/70': isActiveSort(sortBy.createdAt),
             'bg-white hover:bg-slate-100': !isActiveSort(sortBy.createdAt)
           })}
@@ -74,7 +74,7 @@ export default function SortProduct({ pageSize, queryConfig }: Props) {
           {t('latest')}
         </button>
         <button
-          className={classNames('rounded-sm px-3 py-2 capitalize shadow-sm outline-none', {
+          className={classNames('col-span-1 rounded-sm px-3 py-2 capitalize shadow-sm outline-none', {
             'bg-orange text-white hover:bg-orange/70': isActiveSort(sortBy.sold),
             'bg-white hover:bg-slate-100': !isActiveSort(sortBy.sold)
           })}
@@ -85,7 +85,7 @@ export default function SortProduct({ pageSize, queryConfig }: Props) {
 
         <select
           value={order || ''}
-          className={classNames('h-9 rounded-sm border-none px-2 outline-none', {
+          className={classNames('col-span-2 h-9 rounded-sm border-none px-2 outline-none', {
             'bg-orange text-white hover:bg-orange/70': isActiveSort(sortBy.price),
             'bg-white': !isActiveSort(sortBy.price)
           })}
@@ -103,6 +103,7 @@ export default function SortProduct({ pageSize, queryConfig }: Props) {
           </option>
         </select>
       </div>
+
       <div className='flex items-center gap-4'>
         <div>
           <span className='text-orange'>{page}</span>

@@ -101,7 +101,7 @@ class Http {
         return response;
       },
       (error: AxiosError) => {
-        //Chỉ toast những lỗi liên quan 422 và 401
+        //Chỉ toast những lỗi không liên quan 422 và 401
         if (
           ![HttpStatusCode.UnprocessableEntity, HttpStatusCode.Unauthorized].includes(error.response?.status as number)
         ) {

@@ -12,3 +12,14 @@ body {
   font-weight: 400;
   padding: 0;
 }
+
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
+}
+
+/* @media screen and (min-device-width : 320px) and (max-device-width : 480px) {
+  .body {
+    initial-scale: 0.7;
+  }
+ } */
