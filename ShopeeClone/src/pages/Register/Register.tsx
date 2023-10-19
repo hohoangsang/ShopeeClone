@@ -71,10 +71,8 @@ export default function Register() {
   return (
     <div className='flex items-center bg-orange bg-contain lg:h-auth__hero lg:min-h-auth_hero lg:bg-[url("https://down-vn.img.susercontent.com/file/sg-11134004-7qvcy-lfuqe4hftedq21")] lg:bg-center lg:bg-no-repeat lg:py-10'>
       <Helmet>
-        <title>
-          Đăng ký | Shopee Clone
-        </title>
-        <meta name='description' content='Đăng ký tài khoản shopee để bắt đầu mua sắm'/>
+        <title>Đăng ký | Shopee Clone</title>
+        <meta name='description' content='Đăng ký tài khoản shopee để bắt đầu mua sắm' />
       </Helmet>
       <div className='container'>
         <div className='grid grid-cols-1 lg:grid-cols-5'>

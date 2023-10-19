@@ -6,8 +6,8 @@ import COMMON_EN from 'src/locales/en/common.json';
 import COMMON_VI from 'src/locales/vi/common.json';
 import FOOTER_EN from 'src/locales/en/footer.json';
 import FOOTER_VI from 'src/locales/vi/footer.json';
-import HOME_EN from "src/locales/en/home.json"
-import HOME_VI from "src/locales/vi/home.json"
+import HOME_EN from 'src/locales/en/home.json';
+import HOME_VI from 'src/locales/vi/home.json';
 
 export const locales = {
   vi: 'Tiếng việt',

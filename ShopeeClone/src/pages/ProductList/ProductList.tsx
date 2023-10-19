@@ -31,7 +31,7 @@ export default function ProductList() {
     <div className='bg-gray-100 py-3'>
       <Helmet>
         <title>Shopee Clone | Ho Hoang Sang</title>
-        <meta name='descroption' content='Đây là dự án cá nhân và thực hiện không vì mục đích thương mại'/>
+        <meta name='descroption' content='Đây là dự án cá nhân và thực hiện không vì mục đích thương mại' />
       </Helmet>
 
       <div className='container'>
@@ -52,7 +52,8 @@ export default function ProductList() {
             </div>
           </div>
         )}
-      H</div>
+        H
+      </div>
     </div>
   );
 }
