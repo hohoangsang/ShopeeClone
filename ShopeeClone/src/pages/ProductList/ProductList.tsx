@@ -52,7 +52,6 @@ export default function ProductList() {
             </div>
           </div>
         )}
-        H
       </div>
     </div>
   );

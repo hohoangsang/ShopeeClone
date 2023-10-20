@@ -2,7 +2,7 @@ import { Product, ProductList, ProductListConfig } from 'src/@types/product.type
 import api from './api';
 import { ResponseSuccessType } from 'src/@types/utils.type';
 
-const URL = '/products';
+export const URL = '/products';
 
 export const productApi = {
   getProductList: (params: ProductListConfig) => {

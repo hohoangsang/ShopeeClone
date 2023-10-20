@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/no-unresolved
-import { defineConfig } from 'vitest/config'
+import { defineConfig } from 'vitest/config';
 import { type PluginOption } from 'vite';
 import react from '@vitejs/plugin-react';
 import { visualizer } from 'rollup-plugin-visualizer';

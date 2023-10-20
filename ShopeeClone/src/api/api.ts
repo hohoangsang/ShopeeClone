@@ -42,7 +42,7 @@ import { ResponseErrorType } from 'src/@types/utils.type';
 //   }
 // );
 
-class Http {
+export class Http {
   instance: AxiosInstance;
   private accessToken: string;
   private refreshToken: string;
@@ -125,12 +125,12 @@ class Http {
             this.refreshTokenRequest = this.refreshTokenRequest
               ? this.refreshTokenRequest
               : this.handleRefreshToken()?.finally(() => {
-                  //Giữ refreshToken trong 3s tiếp theo để những request tiếp theo bị 401 thì vẫn dùng requestTokenRequest này
-                  //Và số giây giữ phải nhỏ hơn thời gian hết hạn của refreshToken
-                  setTimeout(() => {
-                    this.refreshTokenRequest = null;
-                  }, 3000);
-                });
+                //Giữ refreshToken trong 3s tiếp theo để những request tiếp theo bị 401 thì vẫn dùng requestTokenRequest này
+                //Và số giây giữ phải nhỏ hơn thời gian hết hạn của refreshToken
+                setTimeout(() => {
+                  this.refreshTokenRequest = null;
+                }, 3000);
+              });
 
             return this.refreshTokenRequest?.then((access_token) => {
               if (config?.headers) {
