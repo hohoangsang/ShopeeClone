@@ -14,34 +14,6 @@ import { URL_LOGIN, URL_LOGOUT, URL_REFRESH_TOKEN, URL_REGISTER } from './auth.a
 import { isAxiosErrorUnauthorized, isExpiredTokenError } from 'src/utils/utils';
 import { ResponseErrorType } from 'src/@types/utils.type';
 
-// const api = axios.create({
-//   baseURL: 'https://api-ecom.duthanhduoc.com',
-//   timeout: 10000,
-//   headers: {
-//     'Content-Type': 'application/json'
-//   }
-// });
-
-// api.interceptors.request.use(function (config) {
-//   // console.log(config);
-//   return config;
-// });
-
-// api.interceptors.response.use(
-//   function (response) {
-//     return response;
-//   },
-//   function (error: AxiosError) {
-//     if (error.response?.status !== HttpStatusCode.UnprocessableEntity) {
-//       const data: any = error.response?.data;
-//       const message = data?.message || error.message;
-//       toast.error(message);
-//     }
-
-//     return Promise.reject(error);
-//   }
-// );
-
 export class Http {
   instance: AxiosInstance;
   private accessToken: string;
@@ -56,7 +28,7 @@ export class Http {
       timeout: 10000,
       headers: {
         'Content-Type': 'application/json',
-        'expire-access-token': 10, //10 giây
+        'expire-access-token': 3, //5 giây
         'expire-refresh-token': 60 * 60 // 1 giờ
       }
     });
