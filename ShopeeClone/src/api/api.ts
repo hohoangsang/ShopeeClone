@@ -28,7 +28,7 @@ export class Http {
       timeout: 10000,
       headers: {
         'Content-Type': 'application/json',
-        'expire-access-token': 3, //5 giây
+        'expire-access-token': 5, //5 giây
         'expire-refresh-token': 60 * 60 // 1 giờ
       }
     });
@@ -97,12 +97,12 @@ export class Http {
             this.refreshTokenRequest = this.refreshTokenRequest
               ? this.refreshTokenRequest
               : this.handleRefreshToken()?.finally(() => {
-                //Giữ refreshToken trong 3s tiếp theo để những request tiếp theo bị 401 thì vẫn dùng requestTokenRequest này
-                //Và số giây giữ phải nhỏ hơn thời gian hết hạn của refreshToken
-                setTimeout(() => {
-                  this.refreshTokenRequest = null;
-                }, 3000);
-              });
+                  //Giữ refreshToken trong 3s tiếp theo để những request tiếp theo bị 401 thì vẫn dùng requestTokenRequest này
+                  //Và số giây giữ phải nhỏ hơn thời gian hết hạn của refreshToken
+                  setTimeout(() => {
+                    this.refreshTokenRequest = null;
+                  }, 3000);
+                });
 
             return this.refreshTokenRequest?.then((access_token) => {
               if (config?.headers) {
