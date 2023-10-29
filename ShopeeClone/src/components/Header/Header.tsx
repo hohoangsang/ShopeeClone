@@ -30,7 +30,7 @@ export default function Header() {
   const productInCartData = purchasesData?.data.data;
 
   return (
-    <div className='bg-orange'>
+    <header className='bg-orange'>
       <div className='container py-4 pt-2'>
         <NavHeader />
 
@@ -152,6 +152,6 @@ export default function Header() {
           </Popover>
         </div>
       </div>
-    </div>
+    </header>
   );
 }
