@@ -69,7 +69,12 @@ export default function Login() {
       </Helmet>
       <div className='container'>
         <div className='grid grid-cols-1 lg:grid-cols-5'>
-          <form className=' bg-white p-6 shadow-sm lg:col-span-2 lg:col-start-4' onSubmit={onSubmit} noValidate>
+          <form
+            className=' bg-white p-6 shadow-sm lg:col-span-2 lg:col-start-4'
+            onSubmit={onSubmit}
+            noValidate
+            name='login-form'
+          >
             <div className='form__title text-xl lg:text-2xl'>Đăng nhập</div>
             <div className='mt-3'>
               <Input
