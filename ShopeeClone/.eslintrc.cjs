@@ -38,9 +38,12 @@ module.exports = {
     'react/react-in-jsx-scope': 'off',
     // Cảnh báo khi thẻ <a target='_blank'> mà không có rel="noreferrer"
     'react/jsx-no-target-blank': 'warn',
-    // Tăng cường một số rule prettier (copy từ file .prettierrc qua)
+
+    // Bỏ qua việc check những biến và params đc định nghĩ nhưng ko được sử dụng
+    // Mục đích để khi build production sẽ bỏ qua lỗi này và tiếp tục build
     'no-unused-vars': 'off',
-    '@typescript-eslint/no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': 'warn',
+    // Tăng cường một số rule prettier (copy từ file .prettierrc qua)
     'prettier/prettier': [
       'warn',
       {
