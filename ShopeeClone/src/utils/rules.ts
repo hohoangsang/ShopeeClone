@@ -1,7 +1,7 @@
 import { type RegisterOptions, UseFormGetValues } from 'react-hook-form';
 import * as yup from 'yup';
 
-type RulesType = { [key in 'email' | 'password' | 'confirm_password']?: RegisterOptions };
+type RulesType = { [ key in 'email' | 'password' | 'confirm_password' ]?: RegisterOptions };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getRules = (getValues?: UseFormGetValues<any>): RulesType => ({
@@ -63,7 +63,7 @@ const handleConfirmPasswordYup = (refString: string) => {
     .required('Vui lòng nhập password!')
     .min(5, 'Độ dài từ 5-160 ký tự')
     .max(160, 'Đồ dài từ 5-160 ký tự')
-    .oneOf([yup.ref(refString)], 'Nhập lại mật khẩu không khớp!');
+    .oneOf([ yup.ref(refString) ], 'Nhập lại mật khẩu không khớp!');
 };
 
 export const schema = yup.object({
@@ -71,7 +71,7 @@ export const schema = yup.object({
     .string()
     .required('Vui lòng nhập email!')
     // .email('Invalid email!')
-    .matches(/^[\w-]+@([\w-]+\.)+[\w-]{2,4}$/, 'Invalid email!')
+    .matches(/^[\w-]+@([\w-]+\.)+[\w-]{2,4}$/, 'Email không hợp lệ!')
     .min(5, 'Độ dài từ 5-160 ký tự')
     .max(160, 'Độ dài từ 5-160 ký tự'),
   password: yup
@@ -115,8 +115,8 @@ export const userSchema = yup.object({
   address: yup.string().max(20, 'Đồ dài tối đa là 160 ký tự'),
   date_of_birth: yup.date().max(new Date(), 'Vui lòng chọn ngày trong quá khứ'),
   avatar: yup.string().max(1000, 'Đồ dài tối đa là 1000 ký tự'),
-  password: schema.fields['password'] as yup.StringSchema<string | undefined, yup.AnyObject, undefined, ''>,
-  new_password: schema.fields['password'] as yup.StringSchema<string | undefined, yup.AnyObject, undefined, ''>,
+  password: schema.fields[ 'password' ] as yup.StringSchema<string | undefined, yup.AnyObject, undefined, ''>,
+  new_password: schema.fields[ 'password' ] as yup.StringSchema<string | undefined, yup.AnyObject, undefined, ''>,
   confirm_password: handleConfirmPasswordYup('new_password') as yup.StringSchema<
     string | undefined,
     yup.AnyObject,

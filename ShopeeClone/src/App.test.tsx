@@ -1,11 +1,11 @@
-import { test, describe, expect } from 'vitest';
-import { cleanup, render, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom/vitest';
-import { BrowserRouter, MemoryRouter } from 'react-router-dom';
-import App from './App';
+import { cleanup, screen, waitFor } from '@testing-library/react';
 import { afterEach } from 'node:test';
-import { customTest, logScreen } from './utils/test';
+import { BrowserRouter, MemoryRouter } from 'react-router-dom';
+import { describe, expect, test } from 'vitest';
+import App from './App';
+import { path } from './constants/path';
+import { logScreen, renderWithRouter, testScreen } from './utils/test';
 
 describe('Test App', () => {
   afterEach(() => {
@@ -19,42 +19,41 @@ describe('Test App', () => {
    * callback sẽ dừng khi hết timeout hoặc callback thực thi xong
    */
 
-  test('Test verify homepage & header & footer', async () => {
-    const { unmount } = render(<App />, {
+  testScreen({
+    title: 'Test verify homepage & header & footer',
+    document: {
+      ui: <App />,
       wrapper: BrowserRouter
-    }); //Render App trong môi trường nodejs;
-    //Test title of the page
-    await waitFor(
-      () => {
-        expect(document.querySelector('title')?.textContent).toBe('Shopee Clone | Ho Hoang Sang');
-      },
-      { timeout: 5000 }
-    );
+    },
+    testFn: async () => {
+      await waitFor(
+        () => {
+          expect(document.querySelector('title')?.textContent).toBe('Shopee Clone | Ho Hoang Sang');
+        },
+        { timeout: 5000 }
+      );
 
-    //Test header
-    await waitFor(
-      () => {
-        expect(document.getElementsByTagName('header')[0]).toBeInTheDocument();
-      },
-      { timeout: 2000 }
-    );
+      //Test header
+      await waitFor(
+        () => {
+          expect(document.getElementsByTagName('header')[0]).toBeInTheDocument();
+        },
+        { timeout: 2000 }
+      );
 
-    //Test footer
-    await waitFor(
-      () => {
-        expect(document.querySelector('footer')).toHaveTextContent(/© 2023 Shopee. Tất cả các quyền được bảo lưu/i);
-        expect(document.getElementsByTagName('footer')[0]).toBeInTheDocument();
-      },
-      { timeout: 2000 }
-    );
-    unmount();
+      //Test footer
+      await waitFor(
+        () => {
+          expect(document.querySelector('footer')).toHaveTextContent(/© 2023 Shopee. Tất cả các quyền được bảo lưu/i);
+          expect(document.getElementsByTagName('footer')[0]).toBeInTheDocument();
+        },
+        { timeout: 2000 }
+      );
+    }
   });
 
   test('Test render render app and trigger action navigate to Login/Register page', async () => {
-    const { unmount } = render(<App />, {
-      wrapper: BrowserRouter
-    });
-
+    const { userEvent } = renderWithRouter({ route: '/' });
     const loginBtn = screen.getByText(/Đăng nhập/i);
     if (loginBtn) {
       await userEvent.click(loginBtn);
@@ -81,25 +80,9 @@ describe('Test App', () => {
     //     { timeout: 2000 }
     //   );
     // }
-
-    unmount();
   });
 
-  // test('Test page 404', async () => {
-  //   const badRoute = '/123/badroute';
-
-  //   const { unmount } = render(
-  //     <MemoryRouter initialEntries={[badRoute]}>
-  //       <App />
-  //     </MemoryRouter>
-  //   );
-
-  //   await logScreen();
-
-  //   unmount();
-  // });
-
-  customTest({
+  testScreen({
     title: 'Test page 404',
     document: {
       ui: (
@@ -108,8 +91,21 @@ describe('Test App', () => {
         </MemoryRouter>
       )
     },
-    callBack: async () => {
+    testFn: async () => {
       await logScreen();
     }
+  });
+
+  test('Render register page at the first point access to webpage', async () => {
+    renderWithRouter({ route: path.register });
+
+    await waitFor(
+      () => {
+        expect(screen.getByText(/bạn đã có tài khoản?/i)).toBeInTheDocument();
+      },
+      {
+        timeout: 5000
+      }
+    );
   });
 });

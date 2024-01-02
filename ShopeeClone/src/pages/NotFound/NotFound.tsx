@@ -1,7 +1,12 @@
+import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 export default function NotFound() {
   return (
     <section className='bg-white dark:bg-gray-900'>
+      <Helmet>
+        <title>Not found</title>
+        <meta name='not found' content='Page not found' />
+      </Helmet>
       <div className='mx-auto max-w-screen-xl px-4 py-8 lg:px-6 lg:py-16'>
         <div className='mx-auto max-w-screen-sm text-center'>
           <h1 className='dark:text-primary-500 mb-4 text-5xl font-extrabold tracking-tight text-orange lg:text-7xl'>
