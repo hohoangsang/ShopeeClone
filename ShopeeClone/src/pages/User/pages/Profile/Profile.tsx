@@ -88,7 +88,6 @@ function Info() {
 
 export default function Profile() {
   const { setProfile } = useContext(AppContext);
-
   const queryClient = useQueryClient();
 
   const { data: profileData, refetch } = useQuery({

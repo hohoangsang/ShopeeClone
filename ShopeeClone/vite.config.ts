@@ -7,12 +7,13 @@ import path from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), visualizer() as PluginOption] as any,
+  plugins: [ react(), visualizer() as PluginOption ] as any,
   test: {
-    environment: 'jsdom'
+    environment: 'jsdom',
+    setupFiles: path.resolve(__dirname, './vitest.setup.js')
   },
   server: {
-    port: 3000
+    port: 3000,
   },
   css: {
     devSourcemap: true
