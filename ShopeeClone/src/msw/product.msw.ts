@@ -295,15 +295,15 @@ const productListRequest = http.get(`${config.baseUrl}/products`, ({ request }) 
 
   const url = new URL(request.url);
 
-  Object.keys(params).forEach((key) => url.searchParams.set(key, params[ key ]));
+  Object.keys(params).forEach((key) => url.searchParams.set(key, params[key]));
 
   return HttpResponse.json(productListResponse, { status: HttpStatusCode.Ok });
 });
 
-const productRequest = http.get(`${config.baseUrl}/products/60afb2c76ef5b902180aacba`, ({request}) => {
-  return HttpResponse.json(productResponse, {status: HttpStatusCode.Ok})
-})
+const productRequest = http.get(`${config.baseUrl}/products/60afb2c76ef5b902180aacba`, ({ request }) => {
+  return HttpResponse.json(productResponse, { status: HttpStatusCode.Ok });
+});
 
-const productRestHandler = [ productListRequest, productRequest ];
+const productRestHandler = [productListRequest, productRequest];
 
 export default productRestHandler;

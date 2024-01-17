@@ -265,4 +265,4 @@ const purchasesRequest = http.get(`${config.baseUrl}/purchases`, ({ request }) =
 
 const purchasesRestHandler = [purchasesRequest];
 
-export default purchasesRestHandler
+export default purchasesRestHandler;

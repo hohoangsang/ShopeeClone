@@ -22,8 +22,8 @@ const productResponse = {
 
 const categoriesRequest = http.get(`${config.baseUrl}/categories`, () => {
   return HttpResponse.json(productResponse, { status: HttpStatusCode.Ok });
-})
+});
 
-const categoriesRestHandler = [ categoriesRequest ]
+const categoriesRestHandler = [categoriesRequest];
 
 export default categoriesRestHandler;

@@ -3,7 +3,7 @@ import { cleanup, screen, waitFor } from '@testing-library/react';
 import { afterEach } from 'node:test';
 import { describe, expect, test } from 'vitest';
 import { path } from './constants/path';
-import { logScreen, renderWithRouter } from './utils/test';
+import { renderWithRouter } from './utils/test';
 
 describe('Test App', () => {
   afterEach(() => {
@@ -18,7 +18,7 @@ describe('Test App', () => {
    */
 
   test('Test verify homepage & header & footer', async () => {
-    renderWithRouter({ route: '/' });
+    const { unmount } = renderWithRouter({ route: '/' });
     await waitFor(
       () => {
         expect(document.querySelector('title')?.textContent).toBe('Shopee Clone | Ho Hoang Sang');
@@ -41,12 +41,12 @@ describe('Test App', () => {
       },
       { timeout: 2000 }
     );
+    unmount();
   });
 
   test('Test render render app and trigger action navigate to Login/Register page', async () => {
-    const { userEvent } = renderWithRouter({ route: '/' });
+    const { userEvent, unmount } = renderWithRouter({ route: '/' });
     const loginBtn = screen.getByText(/Đăng nhập/i);
-    console.log(loginBtn);
     if (loginBtn) {
       await userEvent.click(loginBtn);
       await waitFor(
@@ -57,7 +57,6 @@ describe('Test App', () => {
         },
         { timeout: 2000 }
       );
-
     }
     // const registerBtn = screen.getByText(/Đăng ký/i);
     // if (registerBtn) {
@@ -71,12 +70,14 @@ describe('Test App', () => {
     //     { timeout: 2000 }
     //   );
     // }
+
+    unmount();
   });
 
-  test("Test page 404", async () => {
-    renderWithRouter({route: '/123/badroute'});
+  test('Test page 404', async () => {
+    renderWithRouter({ route: '/123/badroute' });
     // await logScreen();
-  })
+  });
 
   test('Render register page at the first point access to webpage', async () => {
     renderWithRouter({ route: path.register });

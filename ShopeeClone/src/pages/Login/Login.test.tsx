@@ -104,8 +104,15 @@ describe('Login page', async () => {
 
     fireEvent.click(submitBtn);
 
-    await logScreen();
+    // await logScreen();
 
-    expect(document.querySelector('title')?.textContent).toBe('Shopee Clone | Ho Hoang Sang');
+    await waitFor(
+      () => {
+        expect(document.querySelector('title')?.textContent).toBe('Shopee Clone | Ho Hoang Sang');
+      },
+      {
+        timeout: 2000
+      }
+    );
   });
 });

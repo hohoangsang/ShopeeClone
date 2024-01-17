@@ -31,7 +31,6 @@ const invalidAccount = {
   password: '123321321'
 };
 
-
 describe('Test call api without attach access token', () => {
   let http = new Http().instance;
 

@@ -13,7 +13,7 @@ const loginResponse = {
     expires_refresh_token: 864000000,
     user: {
       _id: '64664c5b1fa7d60338bfbe4f',
-      roles: [ 'User' ],
+      roles: ['User'],
       email: 'sang5@gmail.com',
       createdAt: '2023-05-18T16:03:39.193Z',
       updatedAt: '2023-10-18T03:50:48.471Z',
@@ -40,7 +40,8 @@ export const access_token_1s =
 export const refresh_token_1000days =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NjY0YzViMWZhN2Q2MDMzOGJmYmU0ZiIsImVtYWlsIjoic2FuZzVAZ21haWwuY29tIiwicm9sZXMiOlsiVXNlciJdLCJjcmVhdGVkX2F0IjoiMjAyMy0xMC0yM1QxNTowMTo1NC4wODBaIiwiaWF0IjoxNjk4MDczMzE0LCJleHAiOjI1NjIwNzMzMTR9.nnOGkc9DbdoePJG7wAVQ1ebA6-okpLsOkSeh4MJDhVA';
 
-export const accessToken = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NjY0YzViMWZhN2Q2MDMzOGJmYmU0ZiIsImVtYWlsIjoic2FuZzVAZ21haWwuY29tIiwicm9sZXMiOlsiVXNlciJdLCJjcmVhdGVkX2F0IjoiMjAyNC0wMS0xMFQxNToxNjowOC43NzhaIiwiaWF0IjoxNzA0ODk5NzY4LCJleHAiOjI3MDQ4OTk3Njh9.GiiyRwRecMThWmU2-NnxwdlVYdzS2rrwWK7D8w1-9PE'
+export const accessToken =
+  'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NjY0YzViMWZhN2Q2MDMzOGJmYmU0ZiIsImVtYWlsIjoic2FuZzVAZ21haWwuY29tIiwicm9sZXMiOlsiVXNlciJdLCJjcmVhdGVkX2F0IjoiMjAyNC0wMS0xMFQxNToxNjowOC43NzhaIiwiaWF0IjoxNzA0ODk5NzY4LCJleHAiOjI3MDQ4OTk3Njh9.GiiyRwRecMThWmU2-NnxwdlVYdzS2rrwWK7D8w1-9PE';
 
 const loginRequest = http.post(`${config.baseUrl}/login`, ({ request }) => {
   return HttpResponse.json(loginResponse, { status: HttpStatusCode.Ok });
@@ -50,6 +51,6 @@ const refreshTokenRequest = http.post(`${config.baseUrl}/refresh-access-token`, 
   return HttpResponse.json(refreshTokenResponse, { status: HttpStatusCode.Ok });
 });
 
-const authRestHandlers = [ loginRequest, refreshTokenRequest ];
+const authRestHandlers = [loginRequest, refreshTokenRequest];
 
 export default authRestHandlers;
