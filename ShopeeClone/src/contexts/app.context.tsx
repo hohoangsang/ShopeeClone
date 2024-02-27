@@ -13,7 +13,7 @@ interface AppContextInterface {
   clearData: () => void;
 }
 
-export const AppContext = createContext<AppContextInterface>({
+export const getInitContext: () => AppContextInterface = () => ({
   isAuthenticated: Boolean(getAccessTokenFromLS()),
   setIsAuthenticated: () => null,
   profile: getProfileFromLS(),
@@ -23,11 +23,20 @@ export const AppContext = createContext<AppContextInterface>({
   clearData: () => null
 });
 
-export default function AppProvider({ children }: { children: React.ReactNode }) {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(Boolean(getAccessTokenFromLS()));
-  const [profile, setProfile] = useState<User | null>(getProfileFromLS());
-  const [extendsPurchases, setExtendsPurchases] = useState<ExtendsPurchases[]>([]);
+const initialContext: AppContextInterface = getInitContext();
 
+export const AppContext = createContext<AppContextInterface>(initialContext);
+
+export default function AppProvider({
+  children,
+  defaultContext = initialContext
+}: {
+  children: React.ReactNode;
+  defaultContext?: AppContextInterface;
+}) {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(defaultContext.isAuthenticated);
+  const [profile, setProfile] = useState<User | null>(defaultContext.profile);
+  const [extendsPurchases, setExtendsPurchases] = useState<ExtendsPurchases[]>(defaultContext.extendsPurchases);
   const clearData = () => {
     setIsAuthenticated(false);
     setProfile(null);

@@ -6,10 +6,10 @@ import { Category } from 'src/@types/category.type';
 import { Product, ProductList } from 'src/@types/product.type';
 import { ResponseSuccessType } from 'src/@types/utils.type';
 import { Http } from 'src/api/api';
-import { URL_LOGIN, URL_REFRESH_TOKEN } from 'src/api/auth.api';
+import { URL_LOGIN } from 'src/api/auth.api';
 import { URL as URL_Categories } from 'src/api/category.api';
 import { URL as URL_Products } from 'src/api/product.api';
-import { beforeEach, describe, expect, test, afterEach, vi, beforeAll, afterAll, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import {
   clearLS,
   getAccessTokenFromLS,
@@ -19,6 +19,7 @@ import {
   setRefreshTokenToLS
 } from '../auth';
 import { isAxiosError } from '../utils';
+import { access_token_1s, refresh_token_1000days } from 'src/msw/auth.msw';
 
 const validAccount = {
   email: 'sang5@gmail.com',
@@ -29,11 +30,6 @@ const invalidAccount = {
   email: 'sang5@gmail.com',
   password: '123321321'
 };
-
-const access_token_1s =
-  'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NjY0YzViMWZhN2Q2MDMzOGJmYmU0ZiIsImVtYWlsIjoic2FuZzVAZ21haWwuY29tIiwicm9sZXMiOlsiVXNlciJdLCJjcmVhdGVkX2F0IjoiMjAyMy0xMC0yM1QxNTowMTo1NC4wODBaIiwiaWF0IjoxNjk4MDczMzE0LCJleHAiOjE2OTgwNzMzMTV9.4mqBSnWU0g5cHRm7lsYi-pRRJ2DMSY-FyhFR-du72oA';
-const refresh_token_1000days =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NjY0YzViMWZhN2Q2MDMzOGJmYmU0ZiIsImVtYWlsIjoic2FuZzVAZ21haWwuY29tIiwicm9sZXMiOlsiVXNlciJdLCJjcmVhdGVkX2F0IjoiMjAyMy0xMC0yM1QxNTowMTo1NC4wODBaIiwiaWF0IjoxNjk4MDczMzE0LCJleHAiOjI1NjIwNzMzMTR9.nnOGkc9DbdoePJG7wAVQ1ebA6-okpLsOkSeh4MJDhVA';
 
 describe('Test call api without attach access token', () => {
   let http = new Http().instance;
@@ -48,7 +44,7 @@ describe('Test call api without attach access token', () => {
     const { products } = res.data.data;
     expect(res.statusText).toBe('OK');
     expect(res.status).toEqual(HttpStatusCode.Ok);
-    expect(Array.isArray(res.data.data.products)).toBeTruthy();
+    expect(Array.isArray(products)).toBeTruthy();
     expect(res.data.data.pagination).toBeTruthy();
   });
 
@@ -90,7 +86,7 @@ describe('Login/Register api', () => {
 
   test('Test logic login with invalid account', async () => {
     try {
-      const res = await http.post<AuthResponse>(URL_LOGIN, invalidAccount);
+      await http.post<AuthResponse>(URL_LOGIN, invalidAccount);
     } catch (e) {
       if (isAxiosError(e)) {
         expect(e.response?.status).toBe(HttpStatusCode.UnprocessableEntity);

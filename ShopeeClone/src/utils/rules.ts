@@ -71,7 +71,7 @@ export const schema = yup.object({
     .string()
     .required('Vui lòng nhập email!')
     // .email('Invalid email!')
-    .matches(/^[\w-]+@([\w-]+\.)+[\w-]{2,4}$/, 'Invalid email!')
+    .matches(/^[\w-]+@([\w-]+\.)+[\w-]{2,4}$/, 'Email không hợp lệ!')
     .min(5, 'Độ dài từ 5-160 ký tự')
     .max(160, 'Độ dài từ 5-160 ký tự'),
   password: yup
