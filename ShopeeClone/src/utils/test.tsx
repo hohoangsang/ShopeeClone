@@ -8,7 +8,7 @@ import App from 'src/App';
 import AppProvider, { getInitContext } from 'src/contexts/app.context';
 import { expect, test } from 'vitest';
 
-const delay = (time: number) =>
+export const delay = (time: number) =>
   new Promise((resolve) => {
     return setTimeout(() => {
       resolve(true);

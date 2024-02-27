@@ -300,7 +300,7 @@ const productListRequest = http.get(`${config.baseUrl}/products`, ({ request }) 
   return HttpResponse.json(productListResponse, { status: HttpStatusCode.Ok });
 });
 
-const productRequest = http.get(`${config.baseUrl}/products/60afb2c76ef5b902180aacba`, ({ request }) => {
+const productRequest = http.get(`${config.baseUrl}/products/:id`, ({ request }) => {
   return HttpResponse.json(productResponse, { status: HttpStatusCode.Ok });
 });
 

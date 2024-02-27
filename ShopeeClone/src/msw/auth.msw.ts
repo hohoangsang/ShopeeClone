@@ -13,7 +13,7 @@ const loginResponse = {
     expires_refresh_token: 864000000,
     user: {
       _id: '64664c5b1fa7d60338bfbe4f',
-      roles: ['User'],
+      roles: [ 'User' ],
       email: 'sang5@gmail.com',
       createdAt: '2023-05-18T16:03:39.193Z',
       updatedAt: '2023-10-18T03:50:48.471Z',
@@ -35,6 +35,8 @@ const refreshTokenResponse = {
   }
 };
 
+const registerResponse422 = { message: 'Lỗi', data: { email: 'Email đã tồn tại' } };
+
 export const access_token_1s =
   'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NjY0YzViMWZhN2Q2MDMzOGJmYmU0ZiIsImVtYWlsIjoic2FuZzVAZ21haWwuY29tIiwicm9sZXMiOlsiVXNlciJdLCJjcmVhdGVkX2F0IjoiMjAyMy0xMC0yM1QxNTowMTo1NC4wODBaIiwiaWF0IjoxNjk4MDczMzE0LCJleHAiOjE2OTgwNzMzMTV9.4mqBSnWU0g5cHRm7lsYi-pRRJ2DMSY-FyhFR-du72oA';
 export const refresh_token_1000days =
@@ -51,6 +53,15 @@ const refreshTokenRequest = http.post(`${config.baseUrl}/refresh-access-token`, 
   return HttpResponse.json(refreshTokenResponse, { status: HttpStatusCode.Ok });
 });
 
-const authRestHandlers = [loginRequest, refreshTokenRequest];
+const registerHandler = http.post(`${config.baseUrl}/register`, async ({request}) => {
+  const requestBody = await request.json();
+  const email = (requestBody as any)?.email;
+
+  if (email === "sang5@gmail.com") {
+    return HttpResponse.json(registerResponse422, {status: HttpStatusCode.UnprocessableEntity})
+  }
+})
+
+const authRestHandlers = [ loginRequest, refreshTokenRequest, registerHandler ];
 
 export default authRestHandlers;
