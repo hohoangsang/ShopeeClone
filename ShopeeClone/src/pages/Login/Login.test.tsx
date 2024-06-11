@@ -26,7 +26,7 @@ describe('Login page', async () => {
     unmoutAction && unmoutAction();
   });
 
-  test('Should display required error when value is invalid', async () => {
+  test('Display required error when value is invalid', async () => {
     if (submitBtn) {
       fireEvent.click(submitBtn);
       await waitFor(
