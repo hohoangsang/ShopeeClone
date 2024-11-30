@@ -8,6 +8,7 @@ import AsideFilter from './components/AsideFilter';
 import Product from './components/Product';
 import SortProduct from './components/SortProduct';
 import { Helmet } from 'react-helmet-async';
+import { useEffect } from 'react';
 
 export default function ProductList() {
   const queryConfig = useQueryConfig();
@@ -26,6 +27,10 @@ export default function ProductList() {
       return categoryApi.getAll();
     }
   });
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [productsData]);
 
   return (
     <div className='bg-gray-100 py-3'>
